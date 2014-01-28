@@ -92,13 +92,9 @@ class RelationshipsWindow(QWidget):
             self.valves = QHBoxLayout()
             self.valves.addWidget(self.valveLabel)
             self.valves.addWidget(self.valveComboBox)
-<<<<<<< HEAD
-            self.valves.addSpacing(130)
 
-=======
             self.get_linked_valves(num)
             
->>>>>>> Scroll bars and resizing completed
             #moisture sensors
             self.sensors = QGridLayout()
             
@@ -139,11 +135,7 @@ class RelationshipsWindow(QWidget):
             self.relationshipsLayout.addLayout(self.valves)
             self.relationshipsLayout.addSpacing(100)
             self.relationshipsLayout.addLayout(self.sensors)
-<<<<<<< HEAD
-            self.relationshipsLayout.addSpacing(20)
-=======
             self.relationshipsLayout.addSpacing(40)
->>>>>>> Scroll bars and resizing completed
             
             
             self.relationshipsGroupBox.setLayout(self.relationshipsLayout)

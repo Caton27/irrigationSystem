@@ -202,93 +202,47 @@ class MainWindow(QMainWindow):
         self.stackedLayout.addWidget(self.queries_layout_widget)
         self.stackedLayout.addWidget(self.about_layout_widget)
         self.stackedLayout.addWidget(self.help_layout_widget_with_scroll_area)##
-<<<<<<< HEAD
-
-    def get_old_size(self):
-        oldSize = ["",""]
-        each = ""
-        oldSizeTemp = str(window.size())[19:-1]
-        for each in oldSizeTemp[0:4]:
-            if each != "," and each != " ":
-                oldSize[0] += each
-        oldSize[0] = int(oldSize[0])
-        for each in oldSizeTemp[5:]:
-            if each != "," and each != " ":
-                oldSize[1] += each
-        oldSize[1] = int(oldSize[1])
-        return oldSize
-=======
->>>>>>> Scroll bars and resizing completed
 
     def flowerbeds_view(self):
         self.stackedLayout.setCurrentIndex(1)
         self.setWindowTitle("Irigation system - View Flowerbeds")
-        oldSize = self.get_old_size()
-        if oldSize[0] < 800 or oldSize[1] < 550:
-            window.resize(800,550)
+        window.resize(800,550)
 
     def moisture_sensors_view(self):
         self.stackedLayout.setCurrentIndex(2)
         self.setWindowTitle("Irigation system - View Moisture Sensors")
-        oldSize = self.get_old_size()
-        if oldSize[0] < 500 or oldSize[1] < 450:
-            window.resize(500,450)
+        window.resize(500,450)
 
 
     def sunlight_view(self):
         self.stackedLayout.setCurrentIndex(3)
         self.setWindowTitle("Irigation system - View Sunlight Readings")
-<<<<<<< HEAD
         window.resize(600,400)
-
-=======
-        window.resize(550,400)
->>>>>>> Scroll bars and resizing completed
 
     def rainfall_view(self):
         self.stackedLayout.setCurrentIndex(4)
         self.setWindowTitle("Irigation system - View Rainfall Readings")
-<<<<<<< HEAD
-        window.resize(400,400)
-=======
         window.resize(500,400)
->>>>>>> Scroll bars and resizing completed
 
     def volumetrics_view(self):
         self.stackedLayout.setCurrentIndex(5)
         self.setWindowTitle("Irigation system - View Volumetrics")
-<<<<<<< HEAD
-        window.resize(550,400)
-=======
         window.resize(500,400)
->>>>>>> Scroll bars and resizing completed
 
     def plants_view(self):
         self.stackedLayout.setCurrentIndex(6)
         self.setWindowTitle("Irigation system - Edit Plants")
-        oldSize = self.get_old_size()
-        if oldSize[0] < 650 or oldSize[1] < 450:
-            window.resize(650,450)
+        window.resize(650,450)
 
     def relationships_view(self):
         self.stackedLayout.setCurrentIndex(7)
         self.setWindowTitle("Irigation system - Edit Relationships")
-<<<<<<< HEAD
-        oldSize = self.get_old_size()
-        if oldSize[0] < 400 or oldSize[1] < 700:
-            window.resize(400,500)
-=======
-        window.resize(400,600)
->>>>>>> Scroll bars and resizing completed
+        window.resize(475,600)
 
     def hardware_view(self):
         self.stackedLayout.setCurrentIndex(8)
         self.setWindowTitle("Irigation system - Add hardware")
-<<<<<<< HEAD
-        window.resize(300,400)
-=======
         window.resize(400,400)
->>>>>>> Scroll bars and resizing completed
 
     def queries_view(self):
         self.stackedLayout.setCurrentIndex(9)
@@ -298,20 +252,12 @@ class MainWindow(QMainWindow):
     def about_view(self):
         self.stackedLayout.setCurrentIndex(10)
         self.setWindowTitle("Irigation system - About")
-<<<<<<< HEAD
-        window.resize(300,400)
-=======
         window.resize(400,400)
->>>>>>> Scroll bars and resizing completed
 
     def help_view(self):
         self.stackedLayout.setCurrentIndex(11)
         self.setWindowTitle("Irigation system - Help")
-<<<<<<< HEAD
-        window.resize(400,500)
-=======
         window.resize(400,450)
->>>>>>> Scroll bars and resizing completed
     
 if __name__ == "__main__":
     application = QApplication(sys.argv)
