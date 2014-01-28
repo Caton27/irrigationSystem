@@ -74,6 +74,7 @@ class PlantsWindow(QWidget):
         self.flowerbedModel.setQuery(self.flowerbedQuery)
         self.flowerbedModel.setEditStrategy(QSqlTableModel.OnManualSubmit)
         self.flowerbedTableView.setModel(self.flowerbedModel)
+        self.flowerbedTableView.setColumnWidth(3,344)
 
         self.flowerbedTableView.setFixedWidth(434)
         self.flowerbedTableView.setMaximumWidth(724)
@@ -83,6 +84,19 @@ class PlantsWindow(QWidget):
         self.layout2.addWidget(self.flowerbedTableView)
         self.layout2.setAlignment(Qt.AlignLeft)
         self.layout2.setAlignment(Qt.AlignTop)
+
+
+        #layout 2_5
+        self.confirmChangesPushButton = QPushButton("Confirm changes")
+        self.confirmChangesPushButton.clicked.connect(self.confirm_changes)
+        
+        self.revertChangesPushButton = QPushButton("Revert changes")
+        self.revertChangesPushButton.clicked.connect(self.select_flowerbed)
+
+        self.layout2_5 = QHBoxLayout()
+        self.layout2_5.addWidget(self.confirmChangesPushButton)
+        self.layout2_5.addWidget(self.revertChangesPushButton)
+        self.layout2_5.setAlignment(Qt.AlignTop)
 
 
         #layout 3
@@ -130,13 +144,13 @@ class PlantsWindow(QWidget):
         
 
         #layout 4
-        self.confirmPushButton = QPushButton("Add plant")
-        self.confirmPushButton.clicked.connect(self.save_changes)
+        self.addPushButton = QPushButton("Add plant")
+        self.addPushButton.clicked.connect(self.save_changes)
 
         self.clearPushButton = QPushButton("Clear fields")
         self.clearPushButton.clicked.connect(self.clear_changes)
 
-        self.layout4.addWidget(self.confirmPushButton)
+        self.layout4.addWidget(self.addPushButton)
         self.layout4.addWidget(self.clearPushButton)
 
         self.layout4.setAlignment(Qt.AlignTop)
@@ -144,6 +158,7 @@ class PlantsWindow(QWidget):
         
         self.plants_layout.addLayout(self.layout1)
         self.plants_layout.addLayout(self.layout2)
+        self.plants_layout.addLayout(self.layout2_5)
         self.plants_layout.addLayout(self.layout3)
         self.plants_layout.addLayout(self.layout4)
         
@@ -152,8 +167,10 @@ class PlantsWindow(QWidget):
 
         return self.plants_layout_widget
 
+    def confirm_changes(self):
+        pass
+    
     def save_changes(self):
-##        self.flowerbedModel.submitAll() #Don't know why this doesn't work
         self.valid = True
         self.reasons = []
         
@@ -279,8 +296,9 @@ class PlantsWindow(QWidget):
                                  WHERE FlowerbedID = ?""")
         self.newQuery.addBindValue(self.currentFlowerbedID)
         self.newQuery.exec_()
-        self.flowerbedModel.setQuery(self.newQuery)
-        self.flowerbedTableView.setModel(self.flowerbedModel)
+        self.newModel = QSqlTableModel()
+        self.newModel.setQuery(self.newQuery)
+        self.flowerbedTableView.setModel(self.newModel)
     
     def temp(self):
         pass
@@ -291,5 +309,5 @@ if __name__ == "__main__":
     plantsWindow = PlantsWindow()
     plantsWindow.show()
     plantsWindow.raise_()
-    plantsWindow.resize(700,300)
+    plantsWindow.resize(700,400)
     application.exec_()

@@ -81,6 +81,7 @@ class FlowerbedsWindow(QWidget):
         self.flowerbedModel = QSqlQueryModel()
         self.flowerbedModel.setQuery(self.flowerbedQuery)
         self.flowerbedTableView.setModel(self.flowerbedModel)
+        self.flowerbedTableView.setColumnWidth(3,390)
 
         self.flowerbedTableView.setFixedWidth(434)
         self.flowerbedTableView.setMaximumWidth(724)
@@ -264,5 +265,5 @@ if __name__ == "__main__":
     flowerbedsWindow = FlowerbedsWindow()
     flowerbedsWindow.show()
     flowerbedsWindow.raise_()
-    flowerbedsWindow.resize(700,600)
+    flowerbedsWindow.resize(800,550)
     application.exec_()

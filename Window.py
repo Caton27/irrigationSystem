@@ -150,25 +150,14 @@ class MainWindow(QMainWindow):
         self.queries_layout_widget = QueryWindow()
         self.about_layout_widget = AboutWindow()
         self.help_layout_widget = HelpWindow()
+        
 
     def add_scroll_areas(self):
-##        self.initial_layout_widget_with_scroll_area = QScrollArea()
-##        self.initial_layout_widget_with_scroll_area.setWidget(self.initial_layout_widget)
-
         self.flowerbeds_layout_widget_with_scroll_area = QScrollArea()
         self.flowerbeds_layout_widget_with_scroll_area.setWidget(self.flowerbeds_layout_widget)
 
         self.moisture_sensors_layout_widget_with_scroll_area = QScrollArea()
         self.moisture_sensors_layout_widget_with_scroll_area.setWidget(self.moisture_sensors_layout_widget)
-
-##        self.sunlight_layout_widget_with_scroll_area = QScrollArea()
-##        self.sunlight_layout_widget_with_scroll_area.setWidget(self.sunlight_layout_widget)
-
-##        self.rainfall_layout_widget_with_scroll_area = QScrollArea()
-##        self.rainfall_layout_widget_with_scroll_area.setWidget(self.rainfall_layout_widget)
-
-##        self.volumetrics_layout_widget_with_scroll_area = QScrollArea()
-##        self.volumetrics_layout_widget_with_scroll_area.setWidget(self.volumetrics_layout_widget)
 
         self.plants_layout_widget_with_scroll_area = QScrollArea()
         self.plants_layout_widget_with_scroll_area.setWidget(self.plants_layout_widget)
@@ -176,32 +165,23 @@ class MainWindow(QMainWindow):
         self.relationships_layout_widget_with_scroll_area = QScrollArea()
         self.relationships_layout_widget_with_scroll_area.setWidget(self.relationships_layout_widget)
 
-##        self.hardware_layout_widget_with_scroll_area = QScrollArea()
-##        self.hardware_layout_widget_with_scroll_area.setWidget(self.hardware_layout_widget)
-
-##        self.queries_layout_widget_with_scroll_area = QScrollArea()
-##        self.queries_layout_widget_with_scroll_area.setWidget(self.queries_layout_widget)
-
-##        self.about_layout_widget_with_scroll_area = QScrollArea()
-##        self.about_layout_widget_with_scroll_area.setWidget(self.about_layout_widget)
-
         self.help_layout_widget_with_scroll_area = QScrollArea()
         self.help_layout_widget_with_scroll_area.setWidget(self.help_layout_widget)
         
 
     def add_windows(self):
         self.stackedLayout.addWidget(self.initial_layout_widget)
-        self.stackedLayout.addWidget(self.flowerbeds_layout_widget_with_scroll_area) ##  
-        self.stackedLayout.addWidget(self.moisture_sensors_layout_widget_with_scroll_area)##
+        self.stackedLayout.addWidget(self.flowerbeds_layout_widget_with_scroll_area) #scroll area
+        self.stackedLayout.addWidget(self.moisture_sensors_layout_widget_with_scroll_area)#scroll area
         self.stackedLayout.addWidget(self.sunlight_layout_widget)
         self.stackedLayout.addWidget(self.rainfall_layout_widget)
         self.stackedLayout.addWidget(self.volumetrics_layout_widget)
-        self.stackedLayout.addWidget(self.plants_layout_widget_with_scroll_area)##
-        self.stackedLayout.addWidget(self.relationships_layout_widget_with_scroll_area)##
+        self.stackedLayout.addWidget(self.plants_layout_widget_with_scroll_area)#scroll area
+        self.stackedLayout.addWidget(self.relationships_layout_widget_with_scroll_area)#scroll area
         self.stackedLayout.addWidget(self.hardware_layout_widget)
         self.stackedLayout.addWidget(self.queries_layout_widget)
         self.stackedLayout.addWidget(self.about_layout_widget)
-        self.stackedLayout.addWidget(self.help_layout_widget_with_scroll_area)##
+        self.stackedLayout.addWidget(self.help_layout_widget_with_scroll_area)#scroll area
 
     def flowerbeds_view(self):
         self.stackedLayout.setCurrentIndex(1)

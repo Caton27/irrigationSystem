@@ -78,7 +78,7 @@ if __name__ == "__main__":
     products.append(("Daffodils",now.strftime("%Y/%m/%d"),"These are some notes",5,3))
     products.append(("Cake",now.strftime("%Y/%m/%d"),"These are some notes",5,4))
     products.append(("Roses",now.strftime("%Y/%m/%d"),"These are some notes",5,5))
-    products.append(("Lilies",now.strftime("%%Y/%m/%d"),"These are some notes",5,7))
+    products.append(("Lilies",now.strftime("%Y/%m/%d"),"These are some notes",5,7))
     products.append(("Daffodils",now.strftime("%Y/%m/%d"),"These are some notes",5,6))
     products.append(("Cake",now.strftime("%Y/%m/%d"),"These are some notes",5,8))
     for each in products:
