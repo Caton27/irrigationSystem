@@ -1,0 +1,323 @@
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4.QtSql import *
+
+from CreateInitialLayout import *
+from CreateFlowerbedsLayout import *
+from CreateMoistureSensorsLayout import *
+from CreateSunlightReadingsLayout import *
+from CreateRainfallReadingsLayout import *
+from CreateVolumetricsLayout import *
+from CreatePlantsLayout import *
+from CreateRelationshipsLayout import *
+from CreateHardwareLayout import *
+from CreateQueriesLayout import *
+from CreateAboutLayout import *
+from CreateHelpLayout import *
+
+import sys
+
+class MainWindow(QMainWindow):
+    """Window"""
+    #constructor
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Irigation system")
+        self.stackedLayout = QStackedLayout()
+
+        self.db = QSqlDatabase.addDatabase("QSQLITE")
+        self.db.setDatabaseName("FlowerbedDatabase.db")
+        self.db.open()
+
+        self.scroll_area = QScrollArea()
+
+        self.setMenuBar = self.menu_bar()
+        self.create_windows()
+        self.add_scroll_areas()
+        self.add_windows()
+        
+        self.central_widget = QWidget()
+        self.central_widget.setLayout(self.stackedLayout)
+        self.setCentralWidget(self.central_widget)
+
+        
+    def menu_bar(self):
+        self.statusBar()
+        self.menubar = self.menuBar()
+        
+        #view menu
+        #creating the flowerbeds action
+        self.flowerbedsAction = QAction(QIcon(), "Flowerbeds", self)
+        self.flowerbedsAction.setStatusTip("View existing flowerbeds")
+        self.flowerbedsAction.triggered.connect(self.flowerbeds_view)
+
+        #creating the moisture sensors action
+        self.moistureSensorsAction = QAction(QIcon(), "Moisture Sensors", self)
+        self.moistureSensorsAction.setStatusTip("View existing moisture sensors")
+        self.moistureSensorsAction.triggered.connect(self.moisture_sensors_view)
+
+        #creating the sunlight readings action
+        self.sunlightReadingsAction = QAction(QIcon(), "Sunlight Readings", self)
+        self.sunlightReadingsAction.setStatusTip("View past sunlight readings")
+        self.sunlightReadingsAction.triggered.connect(self.sunlight_view)
+
+        #creating the rainfall readings action
+        self.rainfallReadingsAction = QAction(QIcon(), "Rainfall Readings", self)
+        self.rainfallReadingsAction.setStatusTip("View past rainfall readings")
+        self.rainfallReadingsAction.triggered.connect(self.rainfall_view)
+
+        #creating the volumetrics action
+        self.volumetricsAction = QAction(QIcon(), "Volumetrics", self)
+        self.volumetricsAction.setStatusTip("View system volumetrics")
+        self.volumetricsAction.triggered.connect(self.volumetrics_view)
+
+        #adding actions to the view menu
+        self.viewMenu = self.menubar.addMenu("View")
+        self.viewMenu.addAction(self.flowerbedsAction)
+        self.viewMenu.addAction(self.moistureSensorsAction)
+        self.viewMenu.addSeparator()
+        self.viewMenu.addAction(self.sunlightReadingsAction)
+        self.viewMenu.addAction(self.rainfallReadingsAction)
+        self.viewMenu.addSeparator()
+        self.viewMenu.addAction(self.volumetricsAction)
+
+
+        #edit menu
+        #creating the plants action
+        self.plantsAction = QAction(QIcon(), "Plants", self)
+        self.plantsAction.setStatusTip("Edit plants")
+        self.plantsAction.triggered.connect(self.plants_view)
+
+        #creating the relationships action
+        self.relationshipsAction = QAction(QIcon(), "Relationships", self)
+        self.relationshipsAction.setStatusTip("Edit existing relationships")
+        self.relationshipsAction.triggered.connect(self.relationships_view)
+
+        #creating the new hardware action
+        self.newHardwareAction = QAction(QIcon(), "New Hardware", self)
+        self.newHardwareAction.setStatusTip("Add new hardware to the system")
+        self.newHardwareAction.triggered.connect(self.hardware_view)
+
+        #adding actions to the edit menu
+        self.editMenu = self.menubar.addMenu("Edit")
+        self.editMenu.addAction(self.plantsAction)
+        self.editMenu.addAction(self.relationshipsAction)
+        self.editMenu.addSeparator()
+        self.editMenu.addAction(self.newHardwareAction)
+
+
+        #options menu
+        #creating the queries action
+        self.queriesAction = QAction(QIcon(), "Queries", self)
+        self.queriesAction.setStatusTip("Input custom queries")
+        self.queriesAction.triggered.connect(self.queries_view)
+
+        #adding actions to the options menu
+        self.optionsMenu = self.menubar.addMenu("Options")
+        self.optionsMenu.addAction(self.queriesAction)
+
+
+        #help menu
+        #creating the about {program name} action
+        self.aboutAction = QAction(QIcon(), "About", self)
+        self.aboutAction.setStatusTip("About the program")
+        self.aboutAction.triggered.connect(self.about_view)
+
+        #creatin the help action
+        self.helpAction = QAction(QIcon(), "Help", self)
+        self.helpAction.setStatusTip("Help")
+        self.helpAction.triggered.connect(self.help_view)
+
+        #adding actions to the options menu
+        self.helpMenu = self.menubar.addMenu("Help")
+        self.helpMenu.addAction(self.aboutAction)
+        self.helpMenu.addAction(self.helpAction)
+
+
+    def temp():
+        pass
+
+    def create_windows(self):
+        self.initial_layout_widget = InitialLayoutWindow()
+        self.flowerbeds_layout_widget = FlowerbedsWindow()
+        self.moisture_sensors_layout_widget = MoistureSensorsWindow()
+        self.sunlight_layout_widget = SunlightWindow()
+        self.rainfall_layout_widget = RainfallWindow()
+        self.volumetrics_layout_widget = VolumetricsWindow()
+        self.plants_layout_widget = PlantsWindow()
+        self.relationships_layout_widget = RelationshipsWindow()
+        self.hardware_layout_widget = HardwareWindow()
+        self.queries_layout_widget = QueryWindow()
+        self.about_layout_widget = AboutWindow()
+        self.help_layout_widget = HelpWindow()
+
+    def add_scroll_areas(self):
+##        self.initial_layout_widget_with_scroll_area = QScrollArea()
+##        self.initial_layout_widget_with_scroll_area.setWidget(self.initial_layout_widget)
+
+        self.flowerbeds_layout_widget_with_scroll_area = QScrollArea()
+        self.flowerbeds_layout_widget_with_scroll_area.setWidget(self.flowerbeds_layout_widget)
+
+        self.moisture_sensors_layout_widget_with_scroll_area = QScrollArea()
+        self.moisture_sensors_layout_widget_with_scroll_area.setWidget(self.moisture_sensors_layout_widget)
+
+##        self.sunlight_layout_widget_with_scroll_area = QScrollArea()
+##        self.sunlight_layout_widget_with_scroll_area.setWidget(self.sunlight_layout_widget)
+
+##        self.rainfall_layout_widget_with_scroll_area = QScrollArea()
+##        self.rainfall_layout_widget_with_scroll_area.setWidget(self.rainfall_layout_widget)
+
+##        self.volumetrics_layout_widget_with_scroll_area = QScrollArea()
+##        self.volumetrics_layout_widget_with_scroll_area.setWidget(self.volumetrics_layout_widget)
+
+        self.plants_layout_widget_with_scroll_area = QScrollArea()
+        self.plants_layout_widget_with_scroll_area.setWidget(self.plants_layout_widget)
+
+        self.relationships_layout_widget_with_scroll_area = QScrollArea()
+        self.relationships_layout_widget_with_scroll_area.setWidget(self.relationships_layout_widget)
+
+##        self.hardware_layout_widget_with_scroll_area = QScrollArea()
+##        self.hardware_layout_widget_with_scroll_area.setWidget(self.hardware_layout_widget)
+
+##        self.queries_layout_widget_with_scroll_area = QScrollArea()
+##        self.queries_layout_widget_with_scroll_area.setWidget(self.queries_layout_widget)
+
+##        self.about_layout_widget_with_scroll_area = QScrollArea()
+##        self.about_layout_widget_with_scroll_area.setWidget(self.about_layout_widget)
+
+        self.help_layout_widget_with_scroll_area = QScrollArea()
+        self.help_layout_widget_with_scroll_area.setWidget(self.help_layout_widget)
+        
+
+    def add_windows(self):
+        self.stackedLayout.addWidget(self.initial_layout_widget)
+        self.stackedLayout.addWidget(self.flowerbeds_layout_widget_with_scroll_area) ##  
+        self.stackedLayout.addWidget(self.moisture_sensors_layout_widget_with_scroll_area)##
+        self.stackedLayout.addWidget(self.sunlight_layout_widget)
+        self.stackedLayout.addWidget(self.rainfall_layout_widget)
+        self.stackedLayout.addWidget(self.volumetrics_layout_widget)
+        self.stackedLayout.addWidget(self.plants_layout_widget_with_scroll_area)##
+        self.stackedLayout.addWidget(self.relationships_layout_widget_with_scroll_area)##
+        self.stackedLayout.addWidget(self.hardware_layout_widget)
+        self.stackedLayout.addWidget(self.queries_layout_widget)
+        self.stackedLayout.addWidget(self.about_layout_widget)
+        self.stackedLayout.addWidget(self.help_layout_widget_with_scroll_area)##
+<<<<<<< HEAD
+
+    def get_old_size(self):
+        oldSize = ["",""]
+        each = ""
+        oldSizeTemp = str(window.size())[19:-1]
+        for each in oldSizeTemp[0:4]:
+            if each != "," and each != " ":
+                oldSize[0] += each
+        oldSize[0] = int(oldSize[0])
+        for each in oldSizeTemp[5:]:
+            if each != "," and each != " ":
+                oldSize[1] += each
+        oldSize[1] = int(oldSize[1])
+        return oldSize
+=======
+>>>>>>> Scroll bars and resizing completed
+
+    def flowerbeds_view(self):
+        self.stackedLayout.setCurrentIndex(1)
+        self.setWindowTitle("Irigation system - View Flowerbeds")
+        oldSize = self.get_old_size()
+        if oldSize[0] < 800 or oldSize[1] < 550:
+            window.resize(800,550)
+
+    def moisture_sensors_view(self):
+        self.stackedLayout.setCurrentIndex(2)
+        self.setWindowTitle("Irigation system - View Moisture Sensors")
+        oldSize = self.get_old_size()
+        if oldSize[0] < 500 or oldSize[1] < 450:
+            window.resize(500,450)
+
+
+    def sunlight_view(self):
+        self.stackedLayout.setCurrentIndex(3)
+        self.setWindowTitle("Irigation system - View Sunlight Readings")
+<<<<<<< HEAD
+        window.resize(600,400)
+
+=======
+        window.resize(550,400)
+>>>>>>> Scroll bars and resizing completed
+
+    def rainfall_view(self):
+        self.stackedLayout.setCurrentIndex(4)
+        self.setWindowTitle("Irigation system - View Rainfall Readings")
+<<<<<<< HEAD
+        window.resize(400,400)
+=======
+        window.resize(500,400)
+>>>>>>> Scroll bars and resizing completed
+
+    def volumetrics_view(self):
+        self.stackedLayout.setCurrentIndex(5)
+        self.setWindowTitle("Irigation system - View Volumetrics")
+<<<<<<< HEAD
+        window.resize(550,400)
+=======
+        window.resize(500,400)
+>>>>>>> Scroll bars and resizing completed
+
+    def plants_view(self):
+        self.stackedLayout.setCurrentIndex(6)
+        self.setWindowTitle("Irigation system - Edit Plants")
+        oldSize = self.get_old_size()
+        if oldSize[0] < 650 or oldSize[1] < 450:
+            window.resize(650,450)
+
+    def relationships_view(self):
+        self.stackedLayout.setCurrentIndex(7)
+        self.setWindowTitle("Irigation system - Edit Relationships")
+<<<<<<< HEAD
+        oldSize = self.get_old_size()
+        if oldSize[0] < 400 or oldSize[1] < 700:
+            window.resize(400,500)
+=======
+        window.resize(400,600)
+>>>>>>> Scroll bars and resizing completed
+
+    def hardware_view(self):
+        self.stackedLayout.setCurrentIndex(8)
+        self.setWindowTitle("Irigation system - Add hardware")
+<<<<<<< HEAD
+        window.resize(300,400)
+=======
+        window.resize(400,400)
+>>>>>>> Scroll bars and resizing completed
+
+    def queries_view(self):
+        self.stackedLayout.setCurrentIndex(9)
+        self.setWindowTitle("Irigation system - Custom queries")
+        window.resize(600,500)
+
+    def about_view(self):
+        self.stackedLayout.setCurrentIndex(10)
+        self.setWindowTitle("Irigation system - About")
+<<<<<<< HEAD
+        window.resize(300,400)
+=======
+        window.resize(400,400)
+>>>>>>> Scroll bars and resizing completed
+
+    def help_view(self):
+        self.stackedLayout.setCurrentIndex(11)
+        self.setWindowTitle("Irigation system - Help")
+<<<<<<< HEAD
+        window.resize(400,500)
+=======
+        window.resize(400,450)
+>>>>>>> Scroll bars and resizing completed
+    
+if __name__ == "__main__":
+    application = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    window.raise_()
+    window.resize(600,450)
+    application.exec_()
+    
