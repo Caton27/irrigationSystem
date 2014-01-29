@@ -49,7 +49,7 @@ class FlowerbedsWindow(QWidget):
         self.flowerbedsComboBox = QComboBox()
         for each in flowerbedList:
             self.flowerbedsComboBox.addItem(str(each))
-        self.flowerbedsComboBox.setFixedWidth(30)
+        self.flowerbedsComboBox.setFixedWidth(50)
         self.flowerbedsComboBox.currentIndexChanged.connect(self.select_flowerbed)
 
         self.addFlowerbedButton = QPushButton("Add new flowerbed")

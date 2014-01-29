@@ -49,7 +49,7 @@ class PlantsWindow(QWidget):
         self.flowerbedsComboBox = QComboBox()
         for each in flowerbedList:
             self.flowerbedsComboBox.addItem(str(each))
-        self.flowerbedsComboBox.setFixedWidth(30)
+        self.flowerbedsComboBox.setFixedWidth(50)
         self.flowerbedsComboBox.currentIndexChanged.connect(self.select_flowerbed)
 
         self.layout1.addWidget(self.flowerbedLabel)
@@ -221,9 +221,9 @@ class PlantsWindow(QWidget):
         item = self.plantNameText
         if len(item) == 0:
             self.valid = False
-            self.reasons.append("Plant name is not present")
+            self.reasons.append("> Plant name is not present")
         elif len(item) > 30:
-            self.reasons.append("Plant name exceeds 30 characters")
+            self.reasons.append("> Plant name exceeds 30 characters")
 
 
     def check_date_planted(self):
@@ -233,26 +233,26 @@ class PlantsWindow(QWidget):
         validString = expression.match(item)
         if len(item) == 0:
             self.valid = False
-            self.reasons.append("Date planted is not present")
+            self.reasons.append("> Date planted is not present")
         elif not validString:
             self.valid = False
-            self.reasons.append("Date planted is not in the correct format (DD/MM/YYYY)")
+            self.reasons.append("> Date planted is not in the correct format (DD/MM/YYYY)")
         else:
             if int(item[3:5]) not in range(1,13):
                 self.valid = False
-                self.reasons.append("Date does not exist")
+                self.reasons.append("> Date does not exist")
             elif item[3:5] in ("04","06","09","11") and int(item[0:2]) not in range(1,31):
                 self.valid = False
-                self.reasons.append("Date does not exist")
+                self.reasons.append("> Date does not exist")
             elif item[3:5] in ("01","03","05","07","08","10","12") and int(item[0:2]) not in range(1,32):
                 self.valid = False
-                self.reasons.append("Date does not exist")
+                self.reasons.append("> Date does not exist")
             elif item[3:5] == "02" and int(item[6:10]) % 4 != 0 and int(item[0:2]) not in range(1,29):
                 self.valid = False
-                self.reasons.append("Date does not exist")
+                self.reasons.append("> Date does not exist")
             elif item[3:5] == "02" and int(item[6:10]) % 4 == 0 and int(item[0:2]) not in range(1,30):
                 self.valid = False
-                self.reasons.append("Date does not exist")
+                self.reasons.append("> Date does not exist")
 
 
     def check_water_req(self):
@@ -265,13 +265,13 @@ class PlantsWindow(QWidget):
                 item = float(item)
                 if item < 0:
                     self.valid = False
-                    self.reasons.append("Water requirements not within range 0 to 5")
+                    self.reasons.append("> Water requirements not within range 0 to 5")
                 elif item > 5:
                     self.valid = False
-                    self.reasons.append("Water requirements not within range 0 to 5")
+                    self.reasons.append("> Water requirements not within range 0 to 5")
             except (ValueError, TypeError):
                 self.valid = False
-                self.reasons.append("Water requirements not a decimal number")
+                self.reasons.append("> Water requirements not a decimal number")
 
 
     def check_notes(self):
@@ -281,7 +281,7 @@ class PlantsWindow(QWidget):
             self.notesText = "-"
         elif len(item) > 100:
             self.valid = False
-            self.reasons.append("Notes exceeds 100 characters")
+            self.reasons.append("> Notes exceeds 100 characters")
         
     
     def select_flowerbed(self):

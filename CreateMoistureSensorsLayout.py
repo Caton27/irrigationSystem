@@ -47,7 +47,7 @@ class MoistureSensorsWindow(QWidget):
         self.moistureSensorsComboBox = QComboBox()
         for each in moistureSensorsList:
             self.moistureSensorsComboBox.addItem(str(each))
-        self.moistureSensorsComboBox.setFixedWidth(30)
+        self.moistureSensorsComboBox.setFixedWidth(50)
         self.moistureSensorsComboBox.currentIndexChanged.connect(self.select_moisture_sensors)
 
         self.timeframeLabel = QLabel("Timeframe")

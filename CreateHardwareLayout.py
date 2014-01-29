@@ -74,10 +74,9 @@ class HardwareWindow(QWidget):
         self.saveChangesPushButton.setFixedWidth(100)
         self.saveChangesPushButton.clicked.connect(self.save_changes_sensor)
 
-        self.clearChangesPushButton = QPushButton("Clear changes")
-        self.clearChangesPushButton.setFixedWidth(100)
-        self.clearChangesPushButton.clicked.connect(self.clear_changes_sensor)
-
+        self.temp = QLabel("")
+        self.temp.setFixedWidth(2)
+        
         self.layout1_1 = QVBoxLayout()
         self.layout1_1.addWidget(self.sensorTypeLabel)
         self.layout1_1.addWidget(self.sensorTypeComboBox)
@@ -87,7 +86,7 @@ class HardwareWindow(QWidget):
         self.layout1_2 = QVBoxLayout()
         self.layout1_2.addWidget(self.flowerbedLabel)
         self.layout1_2.addWidget(self.flowerbedComboBox)
-        self.layout1_2.addWidget(self.clearChangesPushButton)
+        self.layout1_2.addWidget(self.temp)
         self.layout1_2.setAlignment(Qt.AlignLeft)
 
         self.layout1.addLayout(self.layout1_1)
@@ -119,13 +118,12 @@ class HardwareWindow(QWidget):
         self.saveChangesPushButton2.setFixedWidth(100)
         self.saveChangesPushButton2.clicked.connect(self.save_changes_valve)
 
-        self.clearChangesPushButton2 = QPushButton("Clear changes")
-        self.clearChangesPushButton2.setFixedWidth(100)
-        self.clearChangesPushButton2.clicked.connect(self.clear_changes_valve)
+        self.temp = QLabel("")
+        self.temp.setFixedWidth(2)
         
         self.pushButtonsLayout = QHBoxLayout()
         self.pushButtonsLayout.addWidget(self.saveChangesPushButton2)
-        self.pushButtonsLayout.addWidget(self.clearChangesPushButton2)
+        self.pushButtonsLayout.addWidget(self.temp)
         self.pushButtonsLayout.setAlignment(Qt.AlignLeft)
 
         self.layout2.addWidget(self.flowerbedLabel2)
@@ -154,23 +152,92 @@ class HardwareWindow(QWidget):
         self.hardware_layout_widget.setLayout(self.hardware_layout)
 
         return self.hardware_layout_widget
-
-    def temp(self):
-        pass
+    
 
     def save_changes_sensor(self):
-        pass
+        self.sensorTypeText = self.sensorTypeComboBox.currentIndex()
+        self.flowerbedText = self.flowerbedComboBox.currentIndex()
+        if self.sensorTypeText == 1 and self.flowerbedText == 0:
+            message = """The following errors occurred when processing the entered values:
+> No flowerbed ID number was selected (Required for moisture sensors)"""
+            self.message_box(message)
+            
+        elif self.sensorTypeText == 1:
+            with sqlite3.connect("FlowerbedDatabase.db") as db2:
+                self.cursor = db2.cursor()
+                values = (int(self.flowerbedText),)
+                self.cursor.execute("""select sensorID from Sensor
+                                        where flowerbedID = ?""", values)
+                if len(self.cursor.fetchall()) < 3:
+                    with sqlite3.connect("FlowerbedDatabase.db") as db2:
+                        self.cursor = db2.cursor()
+                        values = (1,int(self.flowerbedText))
+                        self.cursor.execute("""insert into Sensor(
+                                               sensorTypeID, flowerbedID)
+                                               values(?,?)""", values)
+                        db2.commit()
+                        message = "New moisture sensor added to flowerbed number {0}".format(self.flowerbedText)
+                        self.message_box(message)
 
-    def clear_changes_sensor(self):
-        self.sensorTypeComboBox.setCurrentIndex(0)
-        self.flowerbedComboBox.setCurrentIndex(0)
+                else:
+                    message = """The following errors occurred when processing the entered values:
+> Flowerbed number {0} already has the maximum number of moisture sensors"""
+                    self.message_box(message)
+                
+                
+        elif self.sensorTypeText == 2:
+            with sqlite3.connect("FlowerbedDatabase.db") as db2:
+                self.cursor = db2.cursor()
+                values = (2,0)
+                self.cursor.execute("""insert into Sensor(
+                                       sensorTypeID, flowerbedID)
+                                       values(?,?)""", values)
+                db2.commit()
+                message = "New sunlight sensor added"
+                self.message_box(message)
+                
+        elif self.sensorTypeText == 3:
+            with sqlite3.connect("FlowerbedDatabase.db") as db2:
+                self.cursor = db2.cursor()
+                values = (3,0)
+                self.cursor.execute("""insert into Sensor(
+                                       sensorTypeID, flowerbedID)
+                                       values(?,?)""", values)
+                db2.commit()
+                message = "New rain sensor added"
+                self.message_box(message)
+        else:
+            message = """The following errors occurred when processing the entered values:
+> No values were entered"""
+            self.message_box(message)
+
 
     def save_changes_valve(self):
-        pass
+        self.flowerbedText = self.flowerbedComboBox2.currentIndex()
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            values = (self.flowerbedText,)
+            self.cursor.execute("select valveID from Valve where flowerbedID = ?", values)
+            results = self.cursor.fetchall()
+            if self.flowerbedText == 0:
+                message = """The following errors occurred when processing the entered values:
+> No flowerbed ID number selected""".format(self.flowerbedText)
+                self.message_box(message)
+            elif len(results) != 0:
+                message = """The following errors occurred when processing the entered values:
+> Flowerbed number {0} already has an attached valve""".format(self.flowerbedText)
+                self.message_box(message)
+            else:
+                self.cursor.execute("insert into Valve(flowerbedID) values(?)",values)
+                message = "New valve added to flowerbed number {0}".format(self.flowerbedText)
+                self.message_box(message)
+            
+                
 
-    def clear_changes_valve(self):
-        self.flowerbedComboBox2.setCurrentIndex(0)
-
+    def message_box(self, message):
+        self.message = QMessageBox()
+        self.message.setText(message)
+        self.message.exec_()
 
 
 if __name__ == "__main__":
