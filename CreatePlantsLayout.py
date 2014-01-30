@@ -117,7 +117,7 @@ class PlantsWindow(QWidget):
         self.datePlantedTempLabel.setFixedWidth(30)
         self.datePlantedPushButton = QPushButton("D")
         self.datePlantedPushButton.setFixedWidth(20)
-        self.datePlantedPushButton.clicked.connect(self.temp) #temp
+        self.datePlantedPushButton.clicked.connect(self.display_calendar) #temp
 
         self.waterReqLabel = QLabel("Water requirements")
         self.waterReqLabel.setFixedWidth(115)
@@ -205,8 +205,8 @@ class PlantsWindow(QWidget):
                 db2.commit()
             self.select_flowerbed()
             
-        #once everything is submitted
-        self.clear_changes()
+            #once everything is submitted
+            self.clear_changes()
 
 
     def clear_changes(self):
@@ -221,9 +221,9 @@ class PlantsWindow(QWidget):
         item = self.plantNameText
         if len(item) == 0:
             self.valid = False
-            self.reasons.append("> Plant name is not present")
+            self.reasons.append("Plant name is not present")
         elif len(item) > 30:
-            self.reasons.append("> Plant name exceeds 30 characters")
+            self.reasons.append("Plant name exceeds 30 characters")
 
 
     def check_date_planted(self):
@@ -233,26 +233,26 @@ class PlantsWindow(QWidget):
         validString = expression.match(item)
         if len(item) == 0:
             self.valid = False
-            self.reasons.append("> Date planted is not present")
+            self.reasons.append("Date planted is not present")
         elif not validString:
             self.valid = False
-            self.reasons.append("> Date planted is not in the correct format (DD/MM/YYYY)")
+            self.reasons.append("Date planted is not in the correct format (DD/MM/YYYY)")
         else:
             if int(item[3:5]) not in range(1,13):
                 self.valid = False
-                self.reasons.append("> Date does not exist")
+                self.reasons.append("Date does not exist")
             elif item[3:5] in ("04","06","09","11") and int(item[0:2]) not in range(1,31):
                 self.valid = False
-                self.reasons.append("> Date does not exist")
+                self.reasons.append("Date does not exist")
             elif item[3:5] in ("01","03","05","07","08","10","12") and int(item[0:2]) not in range(1,32):
                 self.valid = False
-                self.reasons.append("> Date does not exist")
+                self.reasons.append("Date does not exist")
             elif item[3:5] == "02" and int(item[6:10]) % 4 != 0 and int(item[0:2]) not in range(1,29):
                 self.valid = False
-                self.reasons.append("> Date does not exist")
+                self.reasons.append("Date does not exist")
             elif item[3:5] == "02" and int(item[6:10]) % 4 == 0 and int(item[0:2]) not in range(1,30):
                 self.valid = False
-                self.reasons.append("> Date does not exist")
+                self.reasons.append("Date does not exist")
 
 
     def check_water_req(self):
@@ -265,13 +265,13 @@ class PlantsWindow(QWidget):
                 item = float(item)
                 if item < 0:
                     self.valid = False
-                    self.reasons.append("> Water requirements not within range 0 to 5")
+                    self.reasons.append("Water requirements not within range 0 to 5")
                 elif item > 5:
                     self.valid = False
-                    self.reasons.append("> Water requirements not within range 0 to 5")
+                    self.reasons.append("Water requirements not within range 0 to 5")
             except (ValueError, TypeError):
                 self.valid = False
-                self.reasons.append("> Water requirements not a decimal number")
+                self.reasons.append("Water requirements not a decimal number")
 
 
     def check_notes(self):
@@ -281,7 +281,7 @@ class PlantsWindow(QWidget):
             self.notesText = "-"
         elif len(item) > 100:
             self.valid = False
-            self.reasons.append("> Notes exceeds 100 characters")
+            self.reasons.append("Notes exceeds 100 characters")
         
     
     def select_flowerbed(self):
@@ -300,8 +300,28 @@ class PlantsWindow(QWidget):
         self.newModel.setQuery(self.newQuery)
         self.flowerbedTableView.setModel(self.newModel)
     
-    def temp(self):
-        pass
+    def get_date(self):
+        temp = str(self.calendarWindow.selectedDate())[19:-1]
+        dateYear = temp[0:4]
+        dateMonth = temp[6:8]
+        if dateMonth[-1] == ",":
+            dateMonth = "0" + dateMonth[0]
+        dateDay = temp[-2:]
+        if dateDay[0] == " ":
+            dateDay = "0" + dateDay[1]
+        date = dateDay + "/" + dateMonth + "/" + dateYear
+        self.datePlantedLineEdit.setText(date)
+                            
+        self.calendarWindow.hide()
+
+    def display_calendar(self):
+        self.calendarWindow = QCalendarWidget()
+        self.calendarWindow.setFirstDayOfWeek(Qt.Monday)
+        self.calendarWindow.clicked.connect(self.get_date)
+        
+        self.calendarWindow.show()
+        self.calendarWindow.raise_()
+        self.calendarWindow.resize(300,200)
 
 
 if __name__ == "__main__":
