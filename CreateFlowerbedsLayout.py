@@ -258,6 +258,7 @@ class FlowerbedsWindow(QWidget):
         self.confirmMessage = QMessageBox()
         self.confirmMessage.setText("New flowerbed with ID no. {0} has been created".format(newID[0]))
         self.confirmMessage.exec_()
+        self.flowerbedsComboBox.addItem(str(newID[0]))
 
 
 if __name__ == "__main__":

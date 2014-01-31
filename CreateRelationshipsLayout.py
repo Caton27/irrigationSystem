@@ -42,10 +42,10 @@ class RelationshipsWindow(QWidget):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
             self.cursor.execute("select sensorID from Sensor where sensorTypeID = 1")
-            sensorList = []
+            self.sensorList = []
             for each1 in self.cursor.fetchall():
                 for each2 in each1:
-                    sensorList.append(each2)
+                    self.sensorList.append(each2)
 
         self.relationships_layout = QVBoxLayout()
         self.layouts = []
@@ -88,7 +88,7 @@ class RelationshipsWindow(QWidget):
             self.valveComboBox.addItem("-")
             for each2 in self.valveList:
                 self.valveComboBox.addItem(str(each2))
-            self.valveComboBox.setFixedWidth(30)
+            self.valveComboBox.setFixedWidth(50)
             self.valves = QHBoxLayout()
             self.valves.addWidget(self.valveLabel)
             self.valves.addWidget(self.valveComboBox)
@@ -102,9 +102,9 @@ class RelationshipsWindow(QWidget):
             self.moistureSensorLabel1.setFixedWidth(100)
             self.moistureSensorComboBox1 = QComboBox()
             self.moistureSensorComboBox1.addItem("-")
-            for each2 in sensorList:
+            for each2 in self.sensorList:
                 self.moistureSensorComboBox1.addItem(str(each2))
-            self.moistureSensorComboBox1.setFixedWidth(30)
+            self.moistureSensorComboBox1.setFixedWidth(50)
             self.sensors.addWidget(self.moistureSensorLabel1,0,0)
             self.sensors.addWidget(self.moistureSensorComboBox1,0,1)
 
@@ -112,9 +112,9 @@ class RelationshipsWindow(QWidget):
             self.moistureSensorLabel2.setFixedWidth(100)
             self.moistureSensorComboBox2 = QComboBox()
             self.moistureSensorComboBox2.addItem("-")
-            for each2 in sensorList:
+            for each2 in self.sensorList:
                 self.moistureSensorComboBox2.addItem(str(each2))
-            self.moistureSensorComboBox2.setFixedWidth(30)
+            self.moistureSensorComboBox2.setFixedWidth(50)
             self.sensors.addWidget(self.moistureSensorLabel2,1,0)
             self.sensors.addWidget(self.moistureSensorComboBox2,1,1)
 
@@ -122,9 +122,9 @@ class RelationshipsWindow(QWidget):
             self.moistureSensorLabel3.setFixedWidth(100)
             self.moistureSensorComboBox3 = QComboBox()
             self.moistureSensorComboBox3.addItem("-")
-            for each2 in sensorList:
+            for each2 in self.sensorList:
                 self.moistureSensorComboBox3.addItem(str(each2))
-            self.moistureSensorComboBox1.setFixedWidth(30)
+            self.moistureSensorComboBox1.setFixedWidth(50)
             self.sensors.addWidget(self.moistureSensorLabel3,2,0)
             self.sensors.addWidget(self.moistureSensorComboBox3,2,1)
 
@@ -172,13 +172,36 @@ class RelationshipsWindow(QWidget):
             values = (self.flowerbedList[num],)
             self.cursor.execute("select sensorID from Sensor where flowerbedID = ?",values)
             temp = self.cursor.fetchall()
+            print("*****************************")
+            print(temp)
             try:
                 for each in temp[0]:
-                    self.moistureSensorComboBox1.setCurrentIndex(int(each)-2)
+                    num = 1
+                    for each2 in self.sensorList:
+                        if int(each) == int(each2):
+                            print("1.")
+                            print(each)
+                            print(num)
+                            self.moistureSensorComboBox1.setCurrentIndex(num)
+                        num += 1
                 for each in temp[1]:
-                    self.moistureSensorComboBox2.setCurrentIndex(int(each)-2)
+                    num = 1
+                    for each2 in self.sensorList:
+                        if int(each) == int(each2):
+                            print("2.")
+                            print(each)
+                            print(num)
+                            self.moistureSensorComboBox2.setCurrentIndex(num)
+                        num += 1
                 for each in temp[2]:
-                    self.moistureSensorComboBox3.setCurrentIndex(int(each)-2)
+                    num = 1
+                    for each2 in self.sensorList:
+                        if int(each) == int(each2):
+                            print("3.")
+                            print(each)
+                            print(num)
+                            self.moistureSensorComboBox3.setCurrentIndex(num)
+                        num += 1
             except IndexError:
                 pass
 
