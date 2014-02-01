@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
     #constructor
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Irigation system")
+        self.setWindowTitle("Irrigation system")
         self.stackedLayout = QStackedLayout()
 
         self.db = QSqlDatabase.addDatabase("QSQLITE")
@@ -185,58 +185,58 @@ class MainWindow(QMainWindow):
 
     def flowerbeds_view(self):
         self.stackedLayout.setCurrentIndex(1)
-        self.setWindowTitle("Irigation system - View Flowerbeds")
+        self.setWindowTitle("Irrigation system - View Flowerbeds")
         window.resize(800,550)
 
     def moisture_sensors_view(self):
         self.stackedLayout.setCurrentIndex(2)
-        self.setWindowTitle("Irigation system - View Moisture Sensors")
+        self.setWindowTitle("Irrigation system - View Moisture Sensors")
         window.resize(500,450)
 
 
     def sunlight_view(self):
         self.stackedLayout.setCurrentIndex(3)
-        self.setWindowTitle("Irigation system - View Sunlight Readings")
+        self.setWindowTitle("Irrigation system - View Sunlight Readings")
         window.resize(600,400)
 
     def rainfall_view(self):
         self.stackedLayout.setCurrentIndex(4)
-        self.setWindowTitle("Irigation system - View Rainfall Readings")
+        self.setWindowTitle("Irrigation system - View Rainfall Readings")
         window.resize(500,400)
 
     def volumetrics_view(self):
         self.stackedLayout.setCurrentIndex(5)
-        self.setWindowTitle("Irigation system - View Volumetrics")
+        self.setWindowTitle("Irrigation system - View Volumetrics")
         window.resize(500,400)
 
     def plants_view(self):
         self.stackedLayout.setCurrentIndex(6)
-        self.setWindowTitle("Irigation system - Edit Plants")
+        self.setWindowTitle("Irrigation system - Edit Plants")
         window.resize(650,450)
 
     def relationships_view(self):
         self.stackedLayout.setCurrentIndex(7)
-        self.setWindowTitle("Irigation system - Edit Relationships")
+        self.setWindowTitle("Irrigation system - Edit Relationships")
         window.resize(475,600)
 
     def hardware_view(self):
         self.stackedLayout.setCurrentIndex(8)
-        self.setWindowTitle("Irigation system - Add hardware")
+        self.setWindowTitle("Irrigation system - Add hardware")
         window.resize(400,400)
 
     def queries_view(self):
         self.stackedLayout.setCurrentIndex(9)
-        self.setWindowTitle("Irigation system - Custom queries")
+        self.setWindowTitle("Irrigation system - Custom queries")
         window.resize(600,500)
 
     def about_view(self):
         self.stackedLayout.setCurrentIndex(10)
-        self.setWindowTitle("Irigation system - About")
+        self.setWindowTitle("Irrigation system - About")
         window.resize(400,400)
 
     def help_view(self):
         self.stackedLayout.setCurrentIndex(11)
-        self.setWindowTitle("Irigation system - Help")
+        self.setWindowTitle("Irrigation system - Help")
         window.resize(400,450)
     
 if __name__ == "__main__":
