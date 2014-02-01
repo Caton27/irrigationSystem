@@ -115,9 +115,10 @@ class PlantsWindow(QWidget):
         self.datePlantedLineEdit.setPlaceholderText("DD/MM/YYYY")
         self.datePlantedTempLabel = QLabel("")
         self.datePlantedTempLabel.setFixedWidth(30)
-        self.datePlantedPushButton = QPushButton("D")
-        self.datePlantedPushButton.setFixedWidth(20)
-        self.datePlantedPushButton.clicked.connect(self.display_calendar) #temp
+        self.datePlantedPushButton = QPushButton()
+        self.datePlantedPushButton.setIcon(QIcon("images/calendar"))
+        self.datePlantedPushButton.setIconSize(QSize(20,20))
+        self.datePlantedPushButton.clicked.connect(self.display_calendar)
 
         self.waterReqLabel = QLabel("Water requirements")
         self.waterReqLabel.setFixedWidth(115)

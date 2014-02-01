@@ -172,34 +172,23 @@ class RelationshipsWindow(QWidget):
             values = (self.flowerbedList[num],)
             self.cursor.execute("select sensorID from Sensor where flowerbedID = ?",values)
             temp = self.cursor.fetchall()
-            print("*****************************")
-            print(temp)
             try:
                 for each in temp[0]:
                     num = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
-                            print("1.")
-                            print(each)
-                            print(num)
                             self.moistureSensorComboBox1.setCurrentIndex(num)
                         num += 1
                 for each in temp[1]:
                     num = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
-                            print("2.")
-                            print(each)
-                            print(num)
                             self.moistureSensorComboBox2.setCurrentIndex(num)
                         num += 1
                 for each in temp[2]:
                     num = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
-                            print("3.")
-                            print(each)
-                            print(num)
                             self.moistureSensorComboBox3.setCurrentIndex(num)
                         num += 1
             except IndexError:
