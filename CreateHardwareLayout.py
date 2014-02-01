@@ -126,10 +126,11 @@ class HardwareWindow(QWidget):
         self.pushButtonsLayout.addWidget(self.temp)
         self.pushButtonsLayout.setAlignment(Qt.AlignLeft)
 
+        self.layout2.addWidget(self.addValveLabel)
         self.layout2.addWidget(self.flowerbedLabel2)
         self.layout2.addWidget(self.flowerbedComboBox2)
         self.layout2.addLayout(self.pushButtonsLayout)
-        self.layout2.setAlignment(Qt.AlignTop)
+        self.layout2.setAlignment(Qt.AlignVCenter)
 
 
         #layout 3
@@ -138,15 +139,15 @@ class HardwareWindow(QWidget):
         self.layout3.setAlignment(Qt.AlignTop)
 
 
-        #layout 4
-        self.layout4.addWidget(self.addValveLabel)
-        self.layout4.addLayout(self.layout2)
-        self.layout4.setAlignment(Qt.AlignTop)
+        #divider
+        self.divider = QFrame()
+        self.divider.setFrameShape(0x0004)
 
         
         #add layouts
         self.hardware_layout.addLayout(self.layout3)
-        self.hardware_layout.addLayout(self.layout4)
+        self.hardware_layout.addWidget(self.divider)
+        self.hardware_layout.addLayout(self.layout2)
 
         self.hardware_layout_widget = QWidget()
         self.hardware_layout_widget.setLayout(self.hardware_layout)
@@ -245,6 +246,6 @@ if __name__ == "__main__":
     hardwareWindow = HardwareWindow()
     hardwareWindow.show()
     hardwareWindow.raise_()
-    hardwareWindow.resize(800,400)
+    hardwareWindow.resize(400,300)
     application.exec_()
 
