@@ -42,6 +42,7 @@ def sql_statements():
                   sensorID Integer,
                   sensorTypeID Integer,
                   flowerbedID Integer,
+                  hardwareAddress Text,
                   primary key(sensorID),
                   foreign key(sensorTypeID) references Sensor_Type(sensorTypeID)
                   on update cascade on delete restrict,
