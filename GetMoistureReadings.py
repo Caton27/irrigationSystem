@@ -13,7 +13,7 @@ def get_new_readings():
     newReadings = []
     
     #serial
-    ser = serial.Serial('COM3', 9600, timeout=10)
+    ser = serial.Serial('COM3', 9600, timeout = 10)
     for each in sensorValues:
         dataToSend = "M" + str(each[1]) + "?\n"
         ser.write(bytearray(dataToSend,'ascii'))

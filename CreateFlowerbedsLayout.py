@@ -81,10 +81,10 @@ class FlowerbedsWindow(QWidget):
         self.flowerbedModel = QSqlQueryModel()
         self.flowerbedModel.setQuery(self.flowerbedQuery)
         self.flowerbedTableView.setModel(self.flowerbedModel)
-        self.flowerbedTableView.setColumnWidth(3,390)
+        self.flowerbedTableView.setColumnWidth(3,400)
 
         self.flowerbedTableView.setFixedWidth(434)
-        self.flowerbedTableView.setMaximumWidth(724)
+        self.flowerbedTableView.setMaximumWidth(734)
         self.flowerbedTableView.setMinimumHeight(115)
         self.flowerbedTableView.setMaximumHeight(self.maxHeight)
         
@@ -121,17 +121,27 @@ class FlowerbedsWindow(QWidget):
                                        Operation.duration as "Duration (s)",
                                        Operation.amount as "Amount (L)",
                                        Operation.cost as "Cost (£)",
-                                       Reading.reading as "1st Reading"
+                                       Reading.reading as "1st Reading",
+                                       Reading.reading as "2nd Reading"
                                        FROM Operation, Reading
                                        WHERE Operation.FlowerbedID = ?
-                                       AND Operation.readingBeforeID = Reading.readingID""")
+                                       AND Operation.readingBeforeID = Reading.readingID
+                                       AND Operation.readingAfterID = Reading.readingID""")
+        self.newQuery3 = QSqlQuery()
+        self.newQuery3.prepare("""SELECT
+                            Reading.reading as "2nd reading"
+                            FROM Operation, Reading
+                            WHERE Operation.flowerbedID = ?
+                            AND Operation.readingAfterID = Reading.readingID""")
         self.operationQuery.addBindValue(self.currentFlowerbedID)
         self.operationQuery.exec_()
+        self.newQuery3.addBindValue(self.currentFlowerbedID)
+        self.newQuery3.exec_()
         self.operationModel = QSqlQueryModel()
         self.operationModel.setQuery(self.operationQuery)
         self.operationTableView.setModel(self.operationModel)
         
-        self.operationTableView.setFixedWidth(724)
+        self.operationTableView.setFixedWidth(734)
         self.operationTableView.setMinimumHeight(115)
         self.operationTableView.setMaximumHeight(self.maxHeight)
         
@@ -183,7 +193,8 @@ class FlowerbedsWindow(QWidget):
                                   Operation.duration as "Duration (s)",
                                   Operation.amount as "Amount (L)",
                                   Operation.cost as "Cost (£)",
-                                  Reading.reading as "1st Reading"
+                                  Reading.reading as "1st Reading",
+                                  Reading.reading as "2nd Reading"
                                   FROM Operation, Reading
                                   WHERE Operation.FlowerbedID = ?
                                   AND Operation.readingBeforeID = Reading.readingID""")
@@ -221,7 +232,8 @@ class FlowerbedsWindow(QWidget):
                                   Operation.duration as "Duration (s)",
                                   Operation.amount as "Amount (L)",
                                   Operation.cost as "Cost (£)",
-                                  Reading.reading as "1st Reading"
+                                  Reading.reading as "1st Reading",
+                                  Reading.reading as "2nd Reading"
                                   FROM Operation, Reading
                                   WHERE Operation.FlowerbedID = ?
                                   AND Operation.date > ?

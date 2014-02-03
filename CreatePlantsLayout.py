@@ -169,7 +169,7 @@ class PlantsWindow(QWidget):
         return self.plants_layout_widget
 
     def confirm_changes(self):
-        pass
+        self.flowerbedModel.submitAll()
     
     def save_changes(self):
         self.valid = True
