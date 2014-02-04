@@ -121,22 +121,30 @@ class FlowerbedsWindow(QWidget):
                                        Operation.duration as "Duration (s)",
                                        Operation.amount as "Amount (L)",
                                        Operation.cost as "Cost (£)",
-                                       Reading.reading as "1st Reading",
-                                       Reading.reading as "2nd Reading"
+                                       Reading.averageReading as "1st Reading"
                                        FROM Operation, Reading
                                        WHERE Operation.FlowerbedID = ?
                                        AND Operation.readingBeforeID = Reading.readingID
+                                       UNION ALL
+                                       SELECT
+                                       Reading.averageReading as "2nd reading"
+                                       FROM Operation, Reading
+                                       WHERE Operation.flowerbedID = ?
                                        AND Operation.readingAfterID = Reading.readingID""")
-        self.newQuery3 = QSqlQuery()
-        self.newQuery3.prepare("""SELECT
-                            Reading.reading as "2nd reading"
-                            FROM Operation, Reading
-                            WHERE Operation.flowerbedID = ?
-                            AND Operation.readingAfterID = Reading.readingID""")
+        #union
+        self.operationQuery.addBindValue(self.currentFlowerbedID)
         self.operationQuery.addBindValue(self.currentFlowerbedID)
         self.operationQuery.exec_()
+        
+        self.newQuery3 = QSqlQuery()
+        self.newQuery3.prepare("""SELECT
+                                  Reading.averageReading as "2nd reading"
+                                  FROM Operation, Reading
+                                  WHERE Operation.flowerbedID = ?
+                                  AND Operation.readingAfterID = Reading.readingID""")
         self.newQuery3.addBindValue(self.currentFlowerbedID)
         self.newQuery3.exec_()
+        
         self.operationModel = QSqlQueryModel()
         self.operationModel.setQuery(self.operationQuery)
         self.operationTableView.setModel(self.operationModel)

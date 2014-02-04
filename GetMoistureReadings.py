@@ -3,7 +3,7 @@ import sqlite3
 import datetime
 
 
-def get_new_readings():
+def get_new_readings_moisture():
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 1")
@@ -24,8 +24,7 @@ def get_new_readings():
     return newReadings
 
 
-def add_to_database(newReadings):
-
+def add_to_database_moisture(newReadings):
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         for each in newReadings:
@@ -56,5 +55,5 @@ def add_to_database(newReadings):
 
 
 if __name__ == "__main__":
-    newReadings = get_new_readings()
-    add_to_database(newReadings)
+    newReadings = get_new_readings_moisture()
+    add_to_database_moisture(newReadings)

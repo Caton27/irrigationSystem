@@ -179,6 +179,8 @@ class PlantsWindow(QWidget):
         self.datePlantedText = self.datePlantedLineEdit.text()
         self.waterReqText = self.waterReqLineEdit.text()
         self.notesText = self.notesLineEdit.text()
+
+        self.plantNameText = self.plantNameText.capitalize()
         
         self.check_plant_name()
         self.check_date_planted()
@@ -224,6 +226,7 @@ class PlantsWindow(QWidget):
             self.valid = False
             self.reasons.append("Plant name is not present")
         elif len(item) > 30:
+            self.valid = False
             self.reasons.append("Plant name exceeds 30 characters")
 
 
