@@ -63,12 +63,12 @@ class PlantsWindow(QWidget):
         self.flowerbedModel = QSqlTableModel()
         self.flowerbedModel.setTable("Plant")
         self.flowerbedModel.setFilter("flowerbedID = {0}".format(self.currentFlowerbedID))
-        self.flowerbedModel.removeColumns(0,1)
-        self.flowerbedModel.removeColumns(4,1)
         self.flowerbedModel.setEditStrategy(QSqlTableModel.OnManualSubmit)
         self.flowerbedModel.select()
         self.flowerbedTableView.setModel(self.flowerbedModel)
-        self.flowerbedTableView.setColumnWidth(3,344)
+        self.flowerbedTableView.hideColumn(0)
+        self.flowerbedTableView.hideColumn(5)
+        self.flowerbedTableView.setColumnWidth(4,344)
 
         self.flowerbedTableView.setFixedWidth(434)
         self.flowerbedTableView.setMaximumWidth(724)
@@ -287,11 +287,11 @@ class PlantsWindow(QWidget):
         self.flowerbedModel = QSqlTableModel()
         self.flowerbedModel.setTable("Plant")
         self.flowerbedModel.setFilter("flowerbedID = {0}".format(self.currentFlowerbedID))
-        self.flowerbedModel.removeColumns(0,1)
-        self.flowerbedModel.removeColumns(4,1)
         self.flowerbedModel.setEditStrategy(QSqlTableModel.OnManualSubmit)
         self.flowerbedModel.select()
         self.flowerbedTableView.setModel(self.flowerbedModel)
+        self.flowerbedTableView.hideColumn(0)
+        self.flowerbedTableView.hideColumn(5)
     
     def get_date(self):
         temp = str(self.calendarWindow.selectedDate())[19:-1]
