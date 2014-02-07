@@ -121,29 +121,14 @@ class FlowerbedsWindow(QWidget):
                                        Operation.duration as "Duration (s)",
                                        Operation.amount as "Amount (L)",
                                        Operation.cost as "Cost (£)",
-                                       Reading.averageReading as "1st Reading"
+                                       Reading.reading as "1st Reading",
+                                       Reading.averageReading as "2nd Reading"
                                        FROM Operation, Reading
                                        WHERE Operation.FlowerbedID = ?
-                                       AND Operation.readingBeforeID = Reading.readingID
-                                       UNION ALL
-                                       SELECT
-                                       Reading.averageReading as "2nd reading"
-                                       FROM Operation, Reading
-                                       WHERE Operation.flowerbedID = ?
-                                       AND Operation.readingAfterID = Reading.readingID""")
+                                       AND Operation.readingBeforeID = Reading.readingID""")
         #union
         self.operationQuery.addBindValue(self.currentFlowerbedID)
-        self.operationQuery.addBindValue(self.currentFlowerbedID)
         self.operationQuery.exec_()
-        
-        self.newQuery3 = QSqlQuery()
-        self.newQuery3.prepare("""SELECT
-                                  Reading.averageReading as "2nd reading"
-                                  FROM Operation, Reading
-                                  WHERE Operation.flowerbedID = ?
-                                  AND Operation.readingAfterID = Reading.readingID""")
-        self.newQuery3.addBindValue(self.currentFlowerbedID)
-        self.newQuery3.exec_()
         
         self.operationModel = QSqlQueryModel()
         self.operationModel.setQuery(self.operationQuery)
@@ -196,16 +181,16 @@ class FlowerbedsWindow(QWidget):
         #operations
         self.newQuery2 = QSqlQuery()
         self.newQuery2.prepare("""SELECT
-                                  Operation.date as "Date",
-                                  Operation.time as "Time",
-                                  Operation.duration as "Duration (s)",
-                                  Operation.amount as "Amount (L)",
-                                  Operation.cost as "Cost (£)",
-                                  Reading.reading as "1st Reading",
-                                  Reading.reading as "2nd Reading"
-                                  FROM Operation, Reading
-                                  WHERE Operation.FlowerbedID = ?
-                                  AND Operation.readingBeforeID = Reading.readingID""")
+                                       Operation.date as "Date",
+                                       Operation.time as "Time",
+                                       Operation.duration as "Duration (s)",
+                                       Operation.amount as "Amount (L)",
+                                       Operation.cost as "Cost (£)",
+                                       Reading.reading as "1st Reading",
+                                       Reading.averageReading as "2nd Reading"
+                                       FROM Operation, Reading
+                                       WHERE Operation.FlowerbedID = ?
+                                       AND Operation.readingBeforeID = Reading.readingID""")
         self.newQuery2.addBindValue(self.currentFlowerbedID)
         self.newQuery2.exec_()
         self.operationModel.setQuery(self.newQuery2)
@@ -241,11 +226,11 @@ class FlowerbedsWindow(QWidget):
                                   Operation.amount as "Amount (L)",
                                   Operation.cost as "Cost (£)",
                                   Reading.reading as "1st Reading",
-                                  Reading.reading as "2nd Reading"
+                                  Reading.averageReading as "2nd Reading"
                                   FROM Operation, Reading
                                   WHERE Operation.FlowerbedID = ?
-                                  AND Operation.date > ?
-                                  AND Operation.readingBeforeID = Reading.readingID""")
+                                  AND Operation.readingBeforeID = Reading.readingID
+                                  AND Operation.date > ? """)
         self.newQuery3.addBindValue(self.currentFlowerbedID)
         self.newQuery3.addBindValue(self.compareDate)
         self.newQuery3.exec_()

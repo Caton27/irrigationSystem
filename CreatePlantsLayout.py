@@ -60,19 +60,13 @@ class PlantsWindow(QWidget):
         self.flowerbedTableView = QTableView()
         self.currentFlowerbedID = self.flowerbedsComboBox.currentIndex() + 1
         self.maxHeight = 295
-        self.flowerbedQuery = QSqlQuery()
-        self.flowerbedQuery.prepare("""SELECT
-                                       plantGrowing as "Plant",
-                                       datePlanted as "Date Planted",
-                                       waterNeed as "Water Need",
-                                       notes as "Notes"
-                                       FROM Plant
-                                       WHERE FlowerbedID = ?""")
-        self.flowerbedQuery.addBindValue(self.currentFlowerbedID)
-        self.flowerbedQuery.exec_()
         self.flowerbedModel = QSqlTableModel()
-        self.flowerbedModel.setQuery(self.flowerbedQuery)
+        self.flowerbedModel.setTable("Plant")
+        self.flowerbedModel.setFilter("flowerbedID = {0}".format(self.currentFlowerbedID))
+        self.flowerbedModel.removeColumns(0,1)
+        self.flowerbedModel.removeColumns(4,1)
         self.flowerbedModel.setEditStrategy(QSqlTableModel.OnManualSubmit)
+        self.flowerbedModel.select()
         self.flowerbedTableView.setModel(self.flowerbedModel)
         self.flowerbedTableView.setColumnWidth(3,344)
 
@@ -290,19 +284,14 @@ class PlantsWindow(QWidget):
     
     def select_flowerbed(self):
         self.currentFlowerbedID = self.flowerbedsComboBox.currentIndex() + 1
-        self.newQuery = QSqlQuery()
-        self.newQuery.prepare("""SELECT
-                                 plantGrowing as "Plant",
-                                 datePlanted as "Date Planted",
-                                 waterNeed as "Water Need",
-                                 notes as "Notes"
-                                 FROM Plant
-                                 WHERE FlowerbedID = ?""")
-        self.newQuery.addBindValue(self.currentFlowerbedID)
-        self.newQuery.exec_()
-        self.newModel = QSqlTableModel()
-        self.newModel.setQuery(self.newQuery)
-        self.flowerbedTableView.setModel(self.newModel)
+        self.flowerbedModel = QSqlTableModel()
+        self.flowerbedModel.setTable("Plant")
+        self.flowerbedModel.setFilter("flowerbedID = {0}".format(self.currentFlowerbedID))
+        self.flowerbedModel.removeColumns(0,1)
+        self.flowerbedModel.removeColumns(4,1)
+        self.flowerbedModel.setEditStrategy(QSqlTableModel.OnManualSubmit)
+        self.flowerbedModel.select()
+        self.flowerbedTableView.setModel(self.flowerbedModel)
     
     def get_date(self):
         temp = str(self.calendarWindow.selectedDate())[19:-1]
