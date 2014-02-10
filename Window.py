@@ -15,6 +15,8 @@ from CreateQueriesLayout import *
 from CreateAboutLayout import *
 from CreateHelpLayout import *
 
+from GetReadings import *
+
 import sys
 
 class MainWindow(QMainWindow):
@@ -123,7 +125,7 @@ class MainWindow(QMainWindow):
         self.aboutAction.setStatusTip("About the program")
         self.aboutAction.triggered.connect(self.about_view)
 
-        #creatin the help action
+        #creating the help action
         self.helpAction = QAction(QIcon(), "Help", self)
         self.helpAction.setStatusTip("Help")
         self.helpAction.triggered.connect(self.help_view)
@@ -132,6 +134,29 @@ class MainWindow(QMainWindow):
         self.helpMenu = self.menubar.addMenu("Help")
         self.helpMenu.addAction(self.aboutAction)
         self.helpMenu.addAction(self.helpAction)
+
+
+        #take readings
+        #creating the take reading (moisture sensor) action
+        self.moistureAction = QAction(QIcon(), "Take a moisture sensor reading", self)
+        self.moistureAction.setStatusTip("Moisture")
+        self.moistureAction.triggered.connect(self.moisture_view)
+        
+        #creating the take reading (sunlight sensor) action
+        self.sunlightAction = QAction(QIcon(), "Take a sunlight reading", self)
+        self.sunlightAction.setStatusTip("Sunlight")
+        self.sunlightAction.triggered.connect(self.sunlight_view)
+        
+        #creating the take reading (rainfall sensor) action
+        self.rainfallAction = QAction(QIcon(), "Take a rainfall reading", self)
+        self.rainfallAction.setStatusTip("Rainfall")
+        self.rainfallAction.triggered.connect(self.rainfall_view)
+
+        #adding action to the take readings menu
+        self.readingsMenu = self.menubar.addMenu("Take reading")
+        self.readingsMenu.addAction(self.moistureAction)
+        self.readingsMenu.addAction(self.sunlightAction)
+        self.readingsMenu.addAction(self.rainfallAction)
 
 
     def temp():
@@ -238,6 +263,27 @@ class MainWindow(QMainWindow):
         self.stackedLayout.setCurrentIndex(11)
         self.setWindowTitle("Irrigation system - Help")
         window.resize(400,450)
+
+    def moisture_view(self):
+        newReadings = get_new_readings_moisture()
+        add_to_database_moisture(newReadings)
+        confirm_message = QMessageBox()
+        confirm_message.setText("Moisture sensor reading(s) taken and stored")
+        confirm_message.exec_()
+
+    def sunlight_view(self):
+        newReadings = get_new_readings_sunlight()
+        add_to_database_sunlight(newReadings)
+        confirm_message = QMessageBox()
+        confirm_message.setText("Sunlight reading taken and stored")
+        confirm_message.exec_()
+
+    def rainfall_view(self):
+        newReadings = get_new_readings_rainfall()
+        add_to_database_rainfall(newReadings)
+        confirm_message = QMessageBox()
+        confirm_message.setText("Rainfall reading taken and stored")
+        confirm_message.exec_()
     
 if __name__ == "__main__":
     application = QApplication(sys.argv)
