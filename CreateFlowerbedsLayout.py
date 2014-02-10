@@ -121,11 +121,15 @@ class FlowerbedsWindow(QWidget):
                                        Operation.duration as "Duration (s)",
                                        Operation.amount as "Amount (L)",
                                        Operation.cost as "Cost (£)",
-                                       Reading.reading as "1st Reading",
-                                       Reading.averageReading as "2nd Reading"
-                                       FROM Operation, Reading
-                                       WHERE Operation.FlowerbedID = ?
-                                       AND Operation.readingBeforeID = Reading.readingID""")
+                                       reading_before.reading as "1st Reading",
+                                       reading_after.reading as "2nd Reading"
+                                       FROM Operation
+                                       CROSS JOIN reading as reading_before
+                                       CROSS JOIN reading as reading_after
+                                       WHERE Operation.flowerbedID = ?
+                                       AND Operation.readingBeforeID = reading_before.readingID
+                                       AND Operation.readingAfterID = reading_after.readingID""")
+
         #union
         self.operationQuery.addBindValue(self.currentFlowerbedID)
         self.operationQuery.exec_()
@@ -181,16 +185,19 @@ class FlowerbedsWindow(QWidget):
         #operations
         self.newQuery2 = QSqlQuery()
         self.newQuery2.prepare("""SELECT
-                                       Operation.date as "Date",
-                                       Operation.time as "Time",
-                                       Operation.duration as "Duration (s)",
-                                       Operation.amount as "Amount (L)",
-                                       Operation.cost as "Cost (£)",
-                                       Reading.reading as "1st Reading",
-                                       Reading.averageReading as "2nd Reading"
-                                       FROM Operation, Reading
-                                       WHERE Operation.FlowerbedID = ?
-                                       AND Operation.readingBeforeID = Reading.readingID""")
+                                  Operation.date as "Date",
+                                  Operation.time as "Time",
+                                  Operation.duration as "Duration (s)",
+                                  Operation.amount as "Amount (L)",
+                                  Operation.cost as "Cost (£)",
+                                  reading_before.reading as "1st Reading",
+                                  reading_after.reading as "2nd Reading"
+                                  FROM Operation
+                                  CROSS JOIN reading as reading_before
+                                  CROSS JOIN reading as reading_after
+                                  WHERE Operation.flowerbedID = ?
+                                  AND Operation.readingBeforeID = reading_before.readingID
+                                  AND Operation.readingAfterID = reading_after.readingID""")
         self.newQuery2.addBindValue(self.currentFlowerbedID)
         self.newQuery2.exec_()
         self.operationModel.setQuery(self.newQuery2)
@@ -225,11 +232,14 @@ class FlowerbedsWindow(QWidget):
                                   Operation.duration as "Duration (s)",
                                   Operation.amount as "Amount (L)",
                                   Operation.cost as "Cost (£)",
-                                  Reading.reading as "1st Reading",
-                                  Reading.averageReading as "2nd Reading"
-                                  FROM Operation, Reading
-                                  WHERE Operation.FlowerbedID = ?
-                                  AND Operation.readingBeforeID = Reading.readingID
+                                  reading_before.reading as "1st Reading",
+                                  reading_after.reading as "2nd Reading"
+                                  FROM Operation
+                                  CROSS JOIN reading as reading_before
+                                  CROSS JOIN reading as reading_after
+                                  WHERE Operation.flowerbedID = ?
+                                  AND Operation.readingBeforeID = reading_before.readingID
+                                  AND Operation.readingAfterID = reading_after.readingID
                                   AND Operation.date > ? """)
         self.newQuery3.addBindValue(self.currentFlowerbedID)
         self.newQuery3.addBindValue(self.compareDate)
