@@ -23,29 +23,7 @@ class RelationshipsWindow(QWidget):
 
 
     def create_relationships_layout(self):
-        with sqlite3.connect("FlowerbedDatabase.db") as db2:
-            self.cursor = db2.cursor()
-            self.cursor.execute("select flowerbedID from Flowerbed")
-            self.flowerbedList = []
-            for each1 in self.cursor.fetchall():
-                for each2 in each1:
-                    self.flowerbedList.append(each2)
-
-        with sqlite3.connect("FlowerbedDatabase.db") as db2:
-            self.cursor = db2.cursor()
-            self.cursor.execute("select valveID from Valve")
-            self.valveList = []
-            for each1 in self.cursor.fetchall():
-                for each2 in each1:
-                    self.valveList.append(each2)
-
-        with sqlite3.connect("FlowerbedDatabase.db") as db2:
-            self.cursor = db2.cursor()
-            self.cursor.execute("select sensorID from Sensor where sensorTypeID = 1")
-            self.sensorList = []
-            for each1 in self.cursor.fetchall():
-                for each2 in each1:
-                    self.sensorList.append(each2)
+        self.get_the_values()
 
         self.relationships_layout = QVBoxLayout()
         self.layouts = []
@@ -62,10 +40,10 @@ class RelationshipsWindow(QWidget):
         self.relationshipsLabel.setAlignment(Qt.AlignLeft)
 
         self.confirmChangesPushButton = QPushButton("Confirm changes")
-        self.confirmChangesPushButton.clicked.connect(self.temp)
+        self.confirmChangesPushButton.clicked.connect(self.update_values)
 
-        self.clearChangesPushButton = QPushButton("Clear changes")
-        self.clearChangesPushButton.clicked.connect(self.update_values)
+        self.clearChangesPushButton = QPushButton("Revert changes")
+        self.clearChangesPushButton.clicked.connect(self.revert_values)
 
         self.headingLayout = QHBoxLayout()
         self.headingLayout.addWidget(self.relationshipsLabel)
@@ -75,71 +53,86 @@ class RelationshipsWindow(QWidget):
 
         #creating the layouts
         num = 0
+        
+        self.titleList = []
+        self.relationshipsGroupBoxList = []
+        self.relationshipsLayoutList = []
+        self.valveLabelList = []
+        self.valveComboBoxList = []
+        self.valvesList = []
+        self.sensorsList = []
+        self.moistureSensorLabel1List = []
+        self.moistureSensorComboBox1List = []
+        self.moistureSensorLabel2List = []
+        self.moistureSensorComboBox2List = []
+        self.moistureSensorLabel3List = []
+        self.moistureSensorComboBox3List = []
+        
         for each in self.layouts:
-            self.title = "Flowerbed " + str(self.flowerbedList[num]) + ": "
-            self.relationshipsGroupBox = QGroupBox(self.title)
+            self.titleList.append("Flowerbed " + str(self.flowerbedList[num]) + ": ")
+            self.relationshipsGroupBoxList.append(QGroupBox(self.titleList[num]))
             
-            self.relationshipsLayout = QHBoxLayout()
+            self.relationshipsLayoutList.append(QHBoxLayout())
 
             #valves
-            self.valveLabel = QLabel("Valve")
-            self.valveLabel.setFixedWidth(40)
-            self.valveComboBox = QComboBox()
-            self.valveComboBox.addItem("-")
+            self.valveLabelList.append(QLabel("Valve"))
+            self.valveLabelList[num].setFixedWidth(40)
+            self.valveComboBoxList.append(QComboBox())
+            self.valveComboBoxList[num].addItem("-")
             for each2 in self.valveList:
-                self.valveComboBox.addItem(str(each2))
-            self.valveComboBox.setFixedWidth(50)
-            self.valves = QHBoxLayout()
-            self.valves.addWidget(self.valveLabel)
-            self.valves.addWidget(self.valveComboBox)
+                self.valveComboBoxList[num].addItem(str(each2))
+            self.valveComboBoxList[num].setFixedWidth(50)
+            self.valvesList.append(QHBoxLayout())
+            self.valvesList[num].addWidget(self.valveLabelList[num])
+            self.valvesList[num].addWidget(self.valveComboBoxList[num])
 
             self.get_linked_valves(num)
             
             #moisture sensors
-            self.sensors = QGridLayout()
+            self.sensorsList.append(QGridLayout())
             
-            self.moistureSensorLabel1 = QLabel("Moisture sensor")
-            self.moistureSensorLabel1.setFixedWidth(100)
-            self.moistureSensorComboBox1 = QComboBox()
-            self.moistureSensorComboBox1.addItem("-")
+            self.moistureSensorLabel1List.append(QLabel("Moisture sensor"))
+            self.moistureSensorLabel1List[num].setFixedWidth(100)
+            self.moistureSensorComboBox1List.append(QComboBox())
+            self.moistureSensorComboBox1List[num].addItem("-")
             for each2 in self.sensorList:
-                self.moistureSensorComboBox1.addItem(str(each2))
-            self.moistureSensorComboBox1.setFixedWidth(50)
-            self.sensors.addWidget(self.moistureSensorLabel1,0,0)
-            self.sensors.addWidget(self.moistureSensorComboBox1,0,1)
+                self.moistureSensorComboBox1List[num].addItem(str(each2))
+            self.moistureSensorComboBox1List[num].setFixedWidth(50)
+            self.sensorsList[num].addWidget(self.moistureSensorLabel1List[num],0,0)
+            self.sensorsList[num].addWidget(self.moistureSensorComboBox1List[num],0,1)
 
-            self.moistureSensorLabel2 = QLabel("Moisture sensor")
-            self.moistureSensorLabel2.setFixedWidth(100)
-            self.moistureSensorComboBox2 = QComboBox()
-            self.moistureSensorComboBox2.addItem("-")
+            self.moistureSensorLabel2List.append(QLabel("Moisture sensor"))
+            self.moistureSensorLabel2List[num].setFixedWidth(100)
+            self.moistureSensorComboBox2List.append(QComboBox())
+            self.moistureSensorComboBox2List[num].addItem("-")
             for each2 in self.sensorList:
-                self.moistureSensorComboBox2.addItem(str(each2))
-            self.moistureSensorComboBox2.setFixedWidth(50)
-            self.sensors.addWidget(self.moistureSensorLabel2,1,0)
-            self.sensors.addWidget(self.moistureSensorComboBox2,1,1)
+                self.moistureSensorComboBox2List[num].addItem(str(each2))
+            self.moistureSensorComboBox2List[num].setFixedWidth(50)
+            self.sensorsList[num].addWidget(self.moistureSensorLabel2List[num],1,0)
+            self.sensorsList[num].addWidget(self.moistureSensorComboBox2List[num],1,1)
 
-            self.moistureSensorLabel3 = QLabel("Moisture sensor")
-            self.moistureSensorLabel3.setFixedWidth(100)
-            self.moistureSensorComboBox3 = QComboBox()
-            self.moistureSensorComboBox3.addItem("-")
+            self.moistureSensorLabel3List.append(QLabel("Moisture sensor"))
+            self.moistureSensorLabel3List[num].setFixedWidth(100)
+            self.moistureSensorComboBox3List.append(QComboBox())
+            self.moistureSensorComboBox3List[num].addItem("-")
             for each2 in self.sensorList:
-                self.moistureSensorComboBox3.addItem(str(each2))
-            self.moistureSensorComboBox1.setFixedWidth(50)
-            self.sensors.addWidget(self.moistureSensorLabel3,2,0)
-            self.sensors.addWidget(self.moistureSensorComboBox3,2,1)
+                self.moistureSensorComboBox3List[num].addItem(str(each2))
+            self.moistureSensorComboBox1List[num].setFixedWidth(50)
+            self.sensorsList[num].addWidget(self.moistureSensorLabel3List[num],2,0)
+            self.sensorsList[num].addWidget(self.moistureSensorComboBox3List[num],2,1)
 
             self.get_linked_sensors(num)
 
 
-            self.relationshipsLayout.addSpacing(40)
-            self.relationshipsLayout.addLayout(self.valves)
-            self.relationshipsLayout.addSpacing(100)
-            self.relationshipsLayout.addLayout(self.sensors)
-            self.relationshipsLayout.addSpacing(40)
+            self.relationshipsLayoutList[num].addSpacing(40)
+            self.relationshipsLayoutList[num].addLayout(self.valvesList[num])
+            self.relationshipsLayoutList[num].addSpacing(100)
+            self.relationshipsLayoutList[num].addLayout(self.sensorsList[num])
+            self.relationshipsLayoutList[num].addSpacing(40)
             
             
-            self.relationshipsGroupBox.setLayout(self.relationshipsLayout)
-            each.addWidget(self.relationshipsGroupBox)
+            self.relationshipsGroupBoxList[num].setLayout(self.relationshipsLayoutList[num])
+            each.addWidget(self.relationshipsGroupBoxList[num])
 
             num += 1
 
@@ -164,7 +157,7 @@ class RelationshipsWindow(QWidget):
             self.cursor.execute("select valveID from Valve where flowerbedID = ?", values)
             for each1 in self.cursor.fetchall():
                 for each2 in each1:
-                    self.valveComboBox.setCurrentIndex(int(each2))
+                    self.valveComboBoxList[num].setCurrentIndex(int(each2))
 
     def get_linked_sensors(self,num):
          with sqlite3.connect("FlowerbedDatabase.db") as db2:
@@ -174,28 +167,61 @@ class RelationshipsWindow(QWidget):
             temp = self.cursor.fetchall()
             try:
                 for each in temp[0]:
-                    num = 1
+                    num1 = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
-                            self.moistureSensorComboBox1.setCurrentIndex(num)
-                        num += 1
+                            self.moistureSensorComboBox1List[num].setCurrentIndex(num1)
+                        num1 += 1
                 for each in temp[1]:
-                    num = 1
+                    num1 = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
-                            self.moistureSensorComboBox2.setCurrentIndex(num)
-                        num += 1
+                            self.moistureSensorComboBox2List[num].setCurrentIndex(num1)
+                        num1 += 1
                 for each in temp[2]:
-                    num = 1
+                    num1 = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
-                            self.moistureSensorComboBox3.setCurrentIndex(num)
-                        num += 1
+                            self.moistureSensorComboBox3List[num].setCurrentIndex(num1)
+                        num1 += 1
             except IndexError:
                 pass
 
+    def get_the_values(self):
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select flowerbedID from Flowerbed")
+            self.flowerbedList = []
+            for each1 in self.cursor.fetchall():
+                for each2 in each1:
+                    self.flowerbedList.append(each2)
+
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select valveID from Valve")
+            self.valveList = []
+            for each1 in self.cursor.fetchall():
+                for each2 in each1:
+                    self.valveList.append(each2)
+
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select sensorID from Sensor where sensorTypeID = 1")
+            self.sensorList = []
+            for each1 in self.cursor.fetchall():
+                for each2 in each1:
+                    self.sensorList.append(each2)
+
     def update_values(self):
         pass
+
+    def revert_values(self):
+        num = 0
+        self.get_the_values()
+        for each in self.layouts:
+            self.get_linked_valves(num)
+            self.get_linked_sensors(num)
+            num += 1
             
 
     
