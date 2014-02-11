@@ -228,7 +228,29 @@ class RelationshipsWindow(QWidget):
                     self.sensorList.append(each2)
 
     def update_values(self):
-        pass
+        num = 0
+        self.get_the_values()
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            for each in self.layouts:
+                sensors = []
+                flowerbed = num + 1
+                valve = self.valveComboBoxList[num].currentText()
+                sensors.append(self.moistureSensorComboBox1List[num].currentText())
+                sensors.append(self.moistureSensorComboBox2List[num].currentText())
+                sensors.append(self.moistureSensorComboBox3List[num].currentText())
+                values = (flowerbed,valve)
+                self.cursor.execute("update Valve set flowerbedID = ? where valveID = ?", values)
+                db2.commit()
+                for each in sensors:
+                    values = (flowerbed, each)
+                    self.cursor.execute("update Sensor set flowerbedID = ? where sensorID = ?", values)
+                    db2.commit()
+                num += 1
+        messageBox = QMessageBox()
+        messageBox.setText("Relationships updated")
+        messageBox.exec_()
+        
 
     def revert_values(self):
         num = 0
@@ -238,7 +260,6 @@ class RelationshipsWindow(QWidget):
             self.get_linked_sensors(num)
             num += 1
             
-
     
 if __name__ == "__main__":
     application = QApplication(sys.argv)
