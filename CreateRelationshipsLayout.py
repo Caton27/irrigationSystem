@@ -165,6 +165,7 @@ class RelationshipsWindow(QWidget):
             values = (self.flowerbedList[num],)
             self.cursor.execute("select sensorID from Sensor where flowerbedID = ?",values)
             temp = self.cursor.fetchall()
+            gotTo = 0
             try:
                 for each in temp[0]:
                     num1 = 1
@@ -172,20 +173,34 @@ class RelationshipsWindow(QWidget):
                         if int(each) == int(each2):
                             self.moistureSensorComboBox1List[num].setCurrentIndex(num1)
                         num1 += 1
+                gotTo += 1
                 for each in temp[1]:
                     num1 = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
                             self.moistureSensorComboBox2List[num].setCurrentIndex(num1)
                         num1 += 1
+                gotTo += 1
                 for each in temp[2]:
                     num1 = 1
                     for each2 in self.sensorList:
                         if int(each) == int(each2):
                             self.moistureSensorComboBox3List[num].setCurrentIndex(num1)
                         num1 += 1
+                gotTo += 1
             except IndexError:
                 pass
+            if gotTo == 3:
+                pass
+            elif gotTo == 2:
+                self.moistureSensorComboBox3List[num].setCurrentIndex(0)
+            elif gotTo == 1:
+                self.moistureSensorComboBox2List[num].setCurrentIndex(0)
+                self.moistureSensorComboBox3List[num].setCurrentIndex(0)
+            elif gotTo == 0:
+                self.moistureSensorComboBox1List[num].setCurrentIndex(0)
+                self.moistureSensorComboBox2List[num].setCurrentIndex(0)
+                self.moistureSensorComboBox3List[num].setCurrentIndex(0)
 
     def get_the_values(self):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
