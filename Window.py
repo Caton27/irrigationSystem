@@ -15,7 +15,8 @@ from CreateQueriesLayout import *
 from CreateAboutLayout import *
 from CreateHelpLayout import *
 
-from GetReadings import *
+#if PySerial is installed, import GetReadings, otherwise import GetReadingsTemp
+from GetReadingsTemp import *
 
 import sys
 
@@ -140,17 +141,17 @@ class MainWindow(QMainWindow):
         #creating the take reading (moisture sensor) action
         self.moistureAction = QAction(QIcon(), "Take a moisture sensor reading", self)
         self.moistureAction.setStatusTip("Moisture")
-        self.moistureAction.triggered.connect(self.moisture_view)
+        self.moistureAction.triggered.connect(self.moisture_reading_view)
         
         #creating the take reading (sunlight sensor) action
         self.sunlightAction = QAction(QIcon(), "Take a sunlight reading", self)
         self.sunlightAction.setStatusTip("Sunlight")
-        self.sunlightAction.triggered.connect(self.sunlight_view)
+        self.sunlightAction.triggered.connect(self.sunlight_reading_view)
         
         #creating the take reading (rainfall sensor) action
         self.rainfallAction = QAction(QIcon(), "Take a rainfall reading", self)
         self.rainfallAction.setStatusTip("Rainfall")
-        self.rainfallAction.triggered.connect(self.rainfall_view)
+        self.rainfallAction.triggered.connect(self.rainfall_reading_view)
 
         #adding action to the take readings menu
         self.readingsMenu = self.menubar.addMenu("Take reading")
@@ -264,21 +265,21 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Irrigation system - Help")
         window.resize(400,450)
 
-    def moisture_view(self):
+    def moisture_reading_view(self):
         newReadings = get_new_readings_moisture()
         add_to_database_moisture(newReadings)
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()
 
-    def sunlight_view(self):
+    def sunlight_reading_view(self):
         newReadings = get_new_readings_sunlight()
         add_to_database_sunlight(newReadings)
         confirm_message = QMessageBox()
         confirm_message.setText("Sunlight reading taken and stored")
         confirm_message.exec_()
 
-    def rainfall_view(self):
+    def rainfall_reading_view(self):
         newReadings = get_new_readings_rainfall()
         add_to_database_rainfall(newReadings)
         confirm_message = QMessageBox()

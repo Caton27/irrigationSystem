@@ -176,7 +176,10 @@ class MoistureSensorsWindow(QWidget):
             for each in self.cursor.fetchall():
                 for each in each:
                     self.linked1 = each
-            if len(str(self.linked1)) == 0:
+            try:
+                if len(str(self.linked1)) == 0:
+                    self.linked1 = "N/A"
+            except AttributeError:
                 self.linked1 = "N/A"
         self.flowerbedLinks.setText("""This moisture sensor is currently linked to flowerbed number {0}.""".format(self.linked1))
         

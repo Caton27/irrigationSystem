@@ -267,7 +267,10 @@ class FlowerbedsWindow(QWidget):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
             self.cursor.execute("select flowerbedID from Flowerbed")
-            newID = ((int(self.cursor.fetchall()[-1][0]) + 1),)
+            try:
+                newID = ((int(self.cursor.fetchall()[-1][0]) + 1),)
+            except IndexError:
+                newID = (1,)
             self.cursor.execute("insert into Flowerbed(flowerbedID) values(?)",newID)
             db2.commit()
         self.confirmMessage = QMessageBox()

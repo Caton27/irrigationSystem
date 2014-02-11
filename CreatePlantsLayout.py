@@ -180,6 +180,17 @@ class PlantsWindow(QWidget):
         self.check_date_planted()
         self.check_water_req()
         self.check_notes()
+
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select flowerbedID from Flowerbed")
+            flowerbedList = []
+            for each1 in self.cursor.fetchall():
+                for each2 in each1:
+                    flowerbedList.append(each2)
+        if len(flowerbedList) == 0:
+            self.reasons.append("No flowerbeds exist")
+            self.valid = False
         
         if self.valid == False:
             self.notValidText = "The following errors occurred when processing the entered values:"
