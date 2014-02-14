@@ -180,6 +180,11 @@ class HardwareWindow(QWidget):
                         message = "New moisture sensor added to flowerbed number {0}".format(self.flowerbedText)
                         self.message_box(message)
 
+##                        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+##                            self.cursor = db2.cursor()
+##                            self.cursor.execute("select sensorID from Sensor")
+##                        moisture_sensors_layout_widget_with_scroll_area.moistureSensorsComboBox.addItem(str(self.cursor.fetchall()[-1][0]))
+
                 else:
                     message = """The following errors occurred when processing the entered values:
 > Flowerbed number {0} already has the maximum number of moisture sensors"""
@@ -206,7 +211,8 @@ class HardwareWindow(QWidget):
                                        values(?,?)""", values)
                 db2.commit()
                 message = "New rain sensor added"
-                self.message_box(message)
+                self.message_box(message)                        
+                    
         else:
             message = """The following errors occurred when processing the entered values:
 > No values were entered"""
@@ -232,6 +238,7 @@ class HardwareWindow(QWidget):
                 self.cursor.execute("insert into Valve(flowerbedID) values(?)",values)
                 message = "New valve added to flowerbed number {0}".format(self.flowerbedText)
                 self.message_box(message)
+                
             
                 
 
