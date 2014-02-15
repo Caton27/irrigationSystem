@@ -18,12 +18,14 @@ def sql_statements():
     sqls.append("""create table Flowerbed(
                   flowerbedID Integer,
                   primary key(flowerbedID))""")
+    
     sqls.append("""create table Valve(
                   valveID Integer,
                   flowerbedID Integer,
                   primary key(valveID),
                   foreign key(FlowerbedID) references Flowerbed(flowerbedID)
                   on update cascade on delete restrict)""")
+    
     sqls.append("""create table Plant(
                   plantID Integer,
                   plantGrowing Text,
@@ -34,10 +36,12 @@ def sql_statements():
                   primary key(plantID),
                   foreign key(flowerbedID) references Flowerbed(flowerbedID)
                   on update cascade on delete restrict)""")
+    
     sqls.append("""create table Sensor_Type(
                   sensorTypeID Integer,
                   sensorType Text,
                   primary key(sensorTypeID))""")
+    
     sqls.append("""create table Sensor(
                   sensorID Integer,
                   sensorTypeID Integer,
@@ -48,10 +52,12 @@ def sql_statements():
                   on update cascade on delete restrict,
                   foreign key(flowerbedID) references Flowerbed(flowerbedID)
                   on update cascade on delete restrict)""")
+    
     sqls.append("""create table Reading_Type(
                   readingTypeID Integer,
                   readingType Text,
                   primary key(readingTypeID))""")
+    
     sqls.append("""create table Reading(
                   readingID Integer,
                   date Text,
@@ -65,6 +71,7 @@ def sql_statements():
                   on update cascade on delete restrict,
                   foreign key(readingTypeID) references Reading_Type(readingTypeID)
                   on update cascade on delete restrict)""")
+    
     sqls.append("""create table Operation(
                   operationID Integer,
                   date Text,

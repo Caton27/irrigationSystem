@@ -6,6 +6,8 @@ import sqlite3
 import sys
 import datetime
 
+from CreateMoistureSensorsLayout import *
+
 class HardwareWindow(QWidget):
     """Window"""
     #constructor
@@ -183,7 +185,6 @@ class HardwareWindow(QWidget):
 ##                        with sqlite3.connect("FlowerbedDatabase.db") as db2:
 ##                            self.cursor = db2.cursor()
 ##                            self.cursor.execute("select sensorID from Sensor")
-##                        moisture_sensors_layout_widget_with_scroll_area.moistureSensorsComboBox.addItem(str(self.cursor.fetchall()[-1][0]))
 
                 else:
                     message = """The following errors occurred when processing the entered values:

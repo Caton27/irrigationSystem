@@ -274,10 +274,12 @@ class PlantsWindow(QWidget):
                 item = float(item)
                 if item < 0:
                     self.valid = False
-                    self.reasons.append("Water requirements not within range 0 to 5")
-                elif item > 5:
+                    self.reasons.append("Water requirements not within range 0 to 2")
+                elif item > 2:
                     self.valid = False
-                    self.reasons.append("Water requirements not within range 0 to 5")
+                    self.reasons.append("Water requirements not within range 0 to 2")
+                else:
+                    self.waterReqText = round(float(self.waterReqText),3)
             except (ValueError, TypeError):
                 self.valid = False
                 self.reasons.append("Water requirements not a decimal number")

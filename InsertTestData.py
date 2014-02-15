@@ -126,8 +126,8 @@ if __name__ == "__main__":
             cursor.execute(sql,each)
             db.commit()
 
-##    products = []
-##    products.append((1,))
+    products = []
+    products.append((1,))
 ##    products.append((2,))
 ##    products.append((3,))
 ##    products.append((4,))
@@ -136,14 +136,14 @@ if __name__ == "__main__":
 ##    products.append((7,))
 ##    products.append((8,))
 ##    for each in products:
-##        with sqlite3.connect("FlowerbedDatabase.db") as db:
-##            cursor = db.cursor()
-##            sql = "insert into Flowerbed(flowerbedID) values (?)"
-##            cursor.execute(sql,each)
-##            db.commit()
+        with sqlite3.connect("FlowerbedDatabase.db") as db:
+            cursor = db.cursor()
+            sql = "insert into Flowerbed(flowerbedID) values (?)"
+            cursor.execute(sql,each)
+            db.commit()
 
-##    products = []
-##    products.append((1,))
+    products = []
+    products.append((1,))
 ##    products.append((2,))
 ##    products.append((3,))
 ##    products.append((4,))
@@ -151,27 +151,27 @@ if __name__ == "__main__":
 ##    products.append((6,))
 ##    products.append((7,))
 ##    products.append((8,))
-##    for each in products:
-##        with sqlite3.connect("FlowerbedDatabase.db") as db:
-##            cursor = db.cursor()
-##            sql = "insert into Valve(flowerbedID) values (?)"
-##            cursor.execute(sql,each)
-##            db.commit()
+    for each in products:
+        with sqlite3.connect("FlowerbedDatabase.db") as db:
+            cursor = db.cursor()
+            sql = "insert into Valve(flowerbedID) values (?)"
+            cursor.execute(sql,each)
+            db.commit()
 
 
-##    products = []
-##    products.append((2,0))
-##    products.append((3,0))
-##    products.append((1,1))
+    products = []
+    products.append((2,0))
+    products.append((3,0))
+    products.append((1,1))
 ##    products.append((1,1))
 ##    products.append((1,1))
 ##    products.append((1,2))
 ##    products.append((1,2))
 ##    products.append((1,2))
-##    for each in products:
-##        with sqlite3.connect("FlowerbedDatabase.db") as db:
-##            cursor = db.cursor()
-##            sql = "insert into Sensor(sensorTypeID, flowerbedID) values(?,?)"
-##            cursor.execute(sql,each)
-##            db.commit()
+    for each in products:
+        with sqlite3.connect("FlowerbedDatabase.db") as db:
+            cursor = db.cursor()
+            sql = "insert into Sensor(sensorTypeID, flowerbedID) values(?,?)"
+            cursor.execute(sql,each)
+            db.commit()
 
