@@ -268,6 +268,7 @@ class MainWindow(QMainWindow):
     def moisture_reading_view(self):
         newReadings = get_new_readings_moisture()
         add_to_database_moisture(newReadings)
+        calculate_need(newReadings)
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()

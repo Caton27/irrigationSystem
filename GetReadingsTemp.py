@@ -240,7 +240,7 @@ def calculate_need(newReadings):
 if __name__ == "__main__":
     newReadings = get_new_readings_moisture()
     add_to_database_moisture(newReadings)
-##    calculate_need(newReadings)
+    calculate_need(newReadings)
     
     newReadings = get_new_readings_sunlight()
     add_to_database_sunlight(newReadings)
