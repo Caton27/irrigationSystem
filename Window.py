@@ -15,8 +15,12 @@ from CreateQueriesLayout import *
 from CreateAboutLayout import *
 from CreateHelpLayout import *
 
-#if PySerial is installed, import GetReadings, otherwise import GetReadingsTemp
-from GetReadingsTemp import *
+try:
+    from GetReadings import *
+    version = 0
+except ImportError:
+    from GetReadingsTemp import *
+    version = 1
 
 import sys
 
@@ -268,7 +272,9 @@ class MainWindow(QMainWindow):
     def moisture_reading_view(self):
         newReadings = get_new_readings_moisture()
         add_to_database_moisture(newReadings)
-        calculate_need(newReadings)
+        operations = calculate_need(newReadings)
+        if version == 0:
+            water_plants(operations)
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()
