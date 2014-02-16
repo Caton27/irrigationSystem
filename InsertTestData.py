@@ -126,7 +126,7 @@ if __name__ == "__main__":
             cursor.execute(sql,each)
             db.commit()
 
-    volume = 106.8
+    volume = 5
 #volume still needs to be defined
     products = []
     products.append((volume,))
@@ -144,7 +144,7 @@ if __name__ == "__main__":
             cursor.execute(sql,each)
             db.commit()
 
-    rate = 5.02
+    rate = 0.1
 #rate still needs to be defined
     products = []
     products.append((1,rate))

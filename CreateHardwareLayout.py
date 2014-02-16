@@ -19,8 +19,8 @@ class HardwareWindow(QWidget):
         self.db.setDatabaseName("FlowerbedDatabase.db")
         self.db.open()
 
-        #still needs to be properly defined
-        self.universalRate = 5
+        #still needs to be properly defined (L/s)
+        self.universalRate = 0.1
 
         self.create_hardware_layout()
         self.setLayout(self.hardware_layout)
@@ -191,7 +191,7 @@ class HardwareWindow(QWidget):
 
                 else:
                     message = """The following errors occurred when processing the entered values:
-> Flowerbed number {0} already has the maximum number of moisture sensors"""
+> Flowerbed number {0} already has the maximum number of moisture sensors""".format(self.flowerbedText)
                     self.message_box(message)
                 
                 

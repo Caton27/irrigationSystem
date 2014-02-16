@@ -6,7 +6,7 @@ import random
 #it generates random numbers within the allowed range for each reading
 
 #still needs to be properly defined
-#cost of water per cubic meter
+#cost of water per litre
 universalCost = 0.01
 
 
@@ -146,8 +146,6 @@ def calculate_need(newReadings):
                 
     number = 0
     for each in flowerbedIDs:
-##        print("***")
-##        print(each)
         with sqlite3.connect("FlowerbedDatabase.db") as db:
             cursor = db.cursor()
             cursor.execute("select waterNeed from Plant where flowerbedID = ?", (each[0],))
@@ -175,42 +173,44 @@ def calculate_need(newReadings):
                 difference  = 0
             else:
                 difference = round(difference, 3)
-            each.append(difference)
+                each.append(difference)
 
-            now = datetime.datetime.today()
-            cursor.execute("select valveID from Valve where flowerbedID = ?", (each[0],))
-            try:
-                valve = cursor.fetchall()[0][0]
-            except IndexError:
-                valve = "-"
+                now = datetime.datetime.today()
+                cursor.execute("select valveID from Valve where flowerbedID = ?", (each[0],))
+                try:
+                    valve = cursor.fetchall()[0][0]
+                except IndexError:
+                    valve = "-"
 
-            cursor.execute("select rate from Valve where flowerbedID = ?", (each[0],))
-            try:
-                rate = cursor.fetchall()[0][0]
-            except IndexError:
-                rate = 5
+                cursor.execute("select rate from Valve where flowerbedID = ?", (each[0],))
+                try:
+                    rate = cursor.fetchall()[0][0]
+                except IndexError:
+                    rate = 5
 
-            #still need to get values for cost
-            #these are based on difference
+                cursor.execute("select volume from Flowerbed where flowerbedID = ?", (each[0],))
+                try:
+                    volume = cursor.fetchall()[0][0]
+                except IndexError:
+                    volume = 5
+                
+                amount = difference * volume
+                amount = round(amount,3)
+                
+                duration = amount / rate
+                duration = round(duration,0)
+                
+                cost = amount * universalCost
+                cost = round(cost,2)
 
-            cursor.execute("select volume from Flowerbed where flowerbedID = >", (each[0],))
-            try:
-                volume = cursor.fetchall()[0][0]
-            except IndexError:
-                volume = 5
-            
-            amount = difference * volume
-            amount = round(amount,3)
-            
-            duration = amount / rate
-            duration = round(duration,0)
-            
-            cost = amount * universalCost
-            
-            operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),duration,amount,cost,sensorIDs[number][0],"-",valve,each[0]])
-            number += 1
+                averageReading = each[1]
+                cursor.execute("select readingID from Reading where averageReading = ?", each[1])
+                
+                operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),duration,amount,cost,readingIDs[number],"-",valve,each[0]])
+                number += 1
             
     for each in operations:
+        print(each)
         with sqlite3.connect("FlowerbedDatabase.db") as db:
             cursor = db.cursor()
             cursor.execute("""insert into Operation(
@@ -219,17 +219,6 @@ def calculate_need(newReadings):
             db.commit()
             
 
-
-
-##                  date Text,
-##                  time Text,
-##                  duration Integer,
-##                  amount Float,
-##                  cost Float,
-##                  readingBeforeID Integer,
-##                  readingAfterID Integer,
-##                  valveID Integer,
-##                  flowerbedID Integer
                   
 if __name__ == "__main__":
     newReadings = get_new_readings_moisture()
