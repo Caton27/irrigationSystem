@@ -5,9 +5,8 @@ import random
 #this file is a substitute for using serial ports to take readings
 #it generates random numbers within the allowed range for each reading
 
-#still needs to be properly defined
 #cost of water per litre
-universalCost = 0.5
+universalCost = 0.00205
 
 
 def get_new_readings_moisture():
@@ -203,22 +202,22 @@ def calculate_need(newReadings):
                 try:
                     rate = cursor.fetchall()[0][0]
                 except IndexError:
-                    rate = 5
+                    rate = 0.017
 
                 cursor.execute("select volume from Flowerbed where flowerbedID = ?", (each[0],))
                 try:
                     volume = float(cursor.fetchall()[0][0])
                 except IndexError and TypeError:
-                    volume = 5.0
+                    volume = 15.0
                 
                 amount = difference * volume
-                amount = round(amount,3)
+                amount = round(amount,4)
                 
                 duration = amount / rate
                 duration = round(duration,0)
                 
                 cost = amount * universalCost
-                cost = round(cost,3)
+                cost = round(cost,5)
 
                 averageReading = each[1]
                 cursor.execute("select readingID from Reading where averageReading = ?", (each[1],))

@@ -19,8 +19,8 @@ class HardwareWindow(QWidget):
         self.db.setDatabaseName("FlowerbedDatabase.db")
         self.db.open()
 
-        #still needs to be properly defined (L/s)
-        self.universalRate = 0.1
+        #defined in terms of litres per second
+        self.universalRate = 0.017
 
         self.create_hardware_layout()
         self.setLayout(self.hardware_layout)

@@ -17,10 +17,9 @@ class FlowerbedsWindow(QWidget):
         self.db.setDatabaseName("FlowerbedDatabase.db")
         self.db.open()
 
-        #still needs to be defined
         #describes how much water is needed to water the flowerbed
         #so that the moisture reading increases by 1
-        self.universalVolume = 5
+        self.universalVolume = 15.0
 
         self.create_flowerbeds_layout()
         self.setLayout(self.flowerbeds_layout)
