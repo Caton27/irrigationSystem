@@ -19,6 +19,9 @@ class HardwareWindow(QWidget):
         self.db.setDatabaseName("FlowerbedDatabase.db")
         self.db.open()
 
+        #still needs to be properly defined
+        self.universalRate = 5
+
         self.create_hardware_layout()
         self.setLayout(self.hardware_layout)
 
@@ -224,7 +227,7 @@ class HardwareWindow(QWidget):
         self.flowerbedText = self.flowerbedComboBox2.currentIndex()
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
-            values = (self.flowerbedText,)
+            values = (self.flowerbedText,self.universalRate)
             self.cursor.execute("select valveID from Valve where flowerbedID = ?", values)
             results = self.cursor.fetchall()
             if self.flowerbedText == 0:
@@ -236,9 +239,10 @@ class HardwareWindow(QWidget):
 > Flowerbed number {0} already has an attached valve""".format(self.flowerbedText)
                 self.message_box(message)
             else:
-                self.cursor.execute("insert into Valve(flowerbedID) values(?)",values)
+                self.cursor.execute("insert into Valve(flowerbedID, rate) values(?,?)",values)
                 message = "New valve added to flowerbed number {0}".format(self.flowerbedText)
                 self.message_box(message)
+                db2.commit()
                 
             
                 

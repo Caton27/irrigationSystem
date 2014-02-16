@@ -17,11 +17,13 @@ def sql_statements():
     sqls = []
     sqls.append("""create table Flowerbed(
                   flowerbedID Integer,
+                  volume Float,
                   primary key(flowerbedID))""")
     
     sqls.append("""create table Valve(
                   valveID Integer,
                   flowerbedID Integer,
+                  rate Float,
                   primary key(valveID),
                   foreign key(FlowerbedID) references Flowerbed(flowerbedID)
                   on update cascade on delete restrict)""")

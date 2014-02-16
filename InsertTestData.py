@@ -126,24 +126,10 @@ if __name__ == "__main__":
             cursor.execute(sql,each)
             db.commit()
 
+    volume = 106.8
+#volume still needs to be defined
     products = []
-    products.append((1,))
-##    products.append((2,))
-##    products.append((3,))
-##    products.append((4,))
-##    products.append((5,))
-##    products.append((6,))
-##    products.append((7,))
-##    products.append((8,))
-##    for each in products:
-        with sqlite3.connect("FlowerbedDatabase.db") as db:
-            cursor = db.cursor()
-            sql = "insert into Flowerbed(flowerbedID) values (?)"
-            cursor.execute(sql,each)
-            db.commit()
-
-    products = []
-    products.append((1,))
+    products.append((volume,))
 ##    products.append((2,))
 ##    products.append((3,))
 ##    products.append((4,))
@@ -154,7 +140,25 @@ if __name__ == "__main__":
     for each in products:
         with sqlite3.connect("FlowerbedDatabase.db") as db:
             cursor = db.cursor()
-            sql = "insert into Valve(flowerbedID) values (?)"
+            sql = "insert into Flowerbed(volume) values (?)"
+            cursor.execute(sql,each)
+            db.commit()
+
+    rate = 5.02
+#rate still needs to be defined
+    products = []
+    products.append((1,rate))
+##    products.append((2,))
+##    products.append((3,))
+##    products.append((4,))
+##    products.append((5,))
+##    products.append((6,))
+##    products.append((7,))
+##    products.append((8,))
+    for each in products:
+        with sqlite3.connect("FlowerbedDatabase.db") as db:
+            cursor = db.cursor()
+            sql = "insert into Valve(flowerbedID, rate) values (?,?)"
             cursor.execute(sql,each)
             db.commit()
 

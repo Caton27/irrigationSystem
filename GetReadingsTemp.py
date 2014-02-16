@@ -5,6 +5,10 @@ import random
 #this file is a substitute for using serial ports to take readings
 #it generates random numbers within the allowed range for each reading
 
+#still needs to be properly defined
+#cost of water per cubic meter
+universalCost = 0.01
+
 
 def get_new_readings_moisture():
     with sqlite3.connect("FlowerbedDatabase.db") as db:
@@ -175,16 +179,35 @@ def calculate_need(newReadings):
 
             now = datetime.datetime.today()
             cursor.execute("select valveID from Valve where flowerbedID = ?", (each[0],))
-            
             try:
                 valve = cursor.fetchall()[0][0]
             except IndexError:
                 valve = "-"
 
-            #still need to get values for duration, amount and cost
+            cursor.execute("select rate from Valve where flowerbedID = ?", (each[0],))
+            try:
+                rate = cursor.fetchall()[0][0]
+            except IndexError:
+                rate = 5
+
+            #still need to get values for cost
             #these are based on difference
+
+            cursor.execute("select volume from Flowerbed where flowerbedID = >", (each[0],))
+            try:
+                volume = cursor.fetchall()[0][0]
+            except IndexError:
+                volume = 5
             
-            operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),"duration","amount","cost",sensorIDs[number][0],"-",valve,each[0]])
+            amount = difference * volume
+            amount = round(amount,3)
+            
+            duration = amount / rate
+            duration = round(duration,0)
+            
+            cost = amount * universalCost
+            
+            operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),duration,amount,cost,sensorIDs[number][0],"-",valve,each[0]])
             number += 1
             
     for each in operations:
