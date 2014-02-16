@@ -7,7 +7,7 @@ import random
 
 #still needs to be properly defined
 #cost of water per litre
-universalCost = 0.01
+universalCost = 0.5
 
 
 def get_new_readings_moisture():
@@ -35,6 +35,18 @@ def get_new_readings_moisture():
 def add_to_database_moisture(newReadings):
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
+
+        sensorsTemp = []
+        cursor.execute("select operationID, readingBeforeID from Operation where readingAfterID = 0")
+        operationTemp = cursor.fetchall()
+        print(operationTemp)
+        print("***")
+        for each in operationTemp:
+            cursor.execute("select sensorID from Reading where readingID = ?", (each[0],))
+            sensorsTemp.append((cursor.fetchall()[0][0], each[0]))
+        print(sensorsTemp)
+        print("***")
+        
         for each in newReadings:
             value = (each[4],)
             cursor.execute("select flowerbedID from Sensor where sensorID = ?", value)
@@ -58,6 +70,11 @@ def add_to_database_moisture(newReadings):
                               date, time, reading, averageReading,
                               sensorID, readingTypeID)
                               values(?,?,?,?,?,?)""", values)
+            for each2 in sensorsTemp:
+                if each[4] == each2[0]:
+                    #insert each[4] into Operation where operationID = each2[1] for field readingAfterID
+                    pass
+            
             db.commit()
             
 
@@ -190,9 +207,9 @@ def calculate_need(newReadings):
 
                 cursor.execute("select volume from Flowerbed where flowerbedID = ?", (each[0],))
                 try:
-                    volume = cursor.fetchall()[0][0]
-                except IndexError:
-                    volume = 5
+                    volume = float(cursor.fetchall()[0][0])
+                except IndexError and TypeError:
+                    volume = 5.0
                 
                 amount = difference * volume
                 amount = round(amount,3)
@@ -201,29 +218,29 @@ def calculate_need(newReadings):
                 duration = round(duration,0)
                 
                 cost = amount * universalCost
-                cost = round(cost,2)
+                cost = round(cost,3)
 
                 averageReading = each[1]
-                cursor.execute("select readingID from Reading where averageReading = ?", each[1])
+                cursor.execute("select readingID from Reading where averageReading = ?", (each[1],))
+                result = cursor.fetchall()
                 
-                operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),duration,amount,cost,readingIDs[number],"-",valve,each[0]])
+                operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),duration,amount,cost,result[0][0],0,valve,each[0]])
                 number += 1
             
-    for each in operations:
-        print(each)
-        with sqlite3.connect("FlowerbedDatabase.db") as db:
-            cursor = db.cursor()
+    with sqlite3.connect("FlowerbedDatabase.db") as db:
+        cursor = db.cursor()
+        for each in operations:
             cursor.execute("""insert into Operation(
                               date, time, duration, amount, cost, readingBeforeID, readingAfterID, valveID, flowerbedID)
                               values (?,?,?,?,?,?,?,?,?)""", (each[0],each[1],each[2],each[3],each[4],each[5],each[6],each[7],each[8]))
-            db.commit()
+        db.commit()
             
 
                   
 if __name__ == "__main__":
     newReadings = get_new_readings_moisture()
     add_to_database_moisture(newReadings)
-    calculate_need(newReadings)
+##    calculate_need(newReadings)
     
     newReadings = get_new_readings_sunlight()
     add_to_database_sunlight(newReadings)

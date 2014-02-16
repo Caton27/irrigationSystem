@@ -276,7 +276,7 @@ class FlowerbedsWindow(QWidget):
                 newID = ((int(self.cursor.fetchall()[-1][0]) + 1),)
             except IndexError:
                 newID = (1,)
-            self.cursor.execute("insert into Flowerbed(flowerbedID) values(?)",newID)
+            self.cursor.execute("insert into Flowerbed(volume) values(?)",(self.universalVolume,))
             db2.commit()
         self.confirmMessage = QMessageBox()
         self.confirmMessage.setText("New flowerbed with ID no. {0} has been created".format(newID[0]))

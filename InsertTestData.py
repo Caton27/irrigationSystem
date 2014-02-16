@@ -3,8 +3,7 @@ import datetime
 
 if __name__ == "__main__":
     products = []
-####    now = datetime.datetime(2013,9,8,17,40)
-####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),27,25,3,1))
+    products.append((0,"-","-",0,"none",0,1))
 ####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),28,25,3,1))
 ####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),29,25,3,1))
 ####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),30,25,3,1))
@@ -12,12 +11,12 @@ if __name__ == "__main__":
 ####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),32,25,4,1))
 ####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),33,25,5,1))
 ####    products.append((now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),34,25,5,1))
-####    for each in products:
-####        with sqlite3.connect("FlowerbedDatabase.db") as db:
-####            cursor = db.cursor()
-####            sql = "insert into Reading(date, time, reading, averageReading, sensorID, readingTypeID) values (?,?,?,?,?,?)"
-####            cursor.execute(sql,each)
-####            db.commit()
+    for each in products:
+        with sqlite3.connect("FlowerbedDatabase.db") as db:
+            cursor = db.cursor()
+            sql = "insert into Reading(readingID, date, time, reading, averageReading, sensorID, readingTypeID) values (?,?,?,?,?,?,?)"
+            cursor.execute(sql,each)
+            db.commit()
 ##
 ####    products = []
 ####    now = datetime.datetime(2013,9,8,23,40)

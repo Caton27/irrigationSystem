@@ -228,11 +228,11 @@ class HardwareWindow(QWidget):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
             values = (self.flowerbedText,self.universalRate)
-            self.cursor.execute("select valveID from Valve where flowerbedID = ?", values)
+            self.cursor.execute("select valveID from Valve where flowerbedID = ?", (self.flowerbedText,))
             results = self.cursor.fetchall()
             if self.flowerbedText == 0:
                 message = """The following errors occurred when processing the entered values:
-> No flowerbed ID number selected""".format(self.flowerbedText)
+> No flowerbed ID number selected"""
                 self.message_box(message)
             elif len(results) != 0:
                 message = """The following errors occurred when processing the entered values:
