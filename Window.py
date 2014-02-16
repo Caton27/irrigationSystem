@@ -15,12 +15,10 @@ from CreateQueriesLayout import *
 from CreateAboutLayout import *
 from CreateHelpLayout import *
 
-try:
-    from GetReadings import *
-    version = 0
-except ImportError:
-    from GetReadingsTemp import *
-    version = 1
+#if able to use serial, remove "Temp" and uncomment third line down
+from GetReadingsTemp import *
+simulationMode = 1
+#simulationMode = 0
 
 import sys
 
@@ -273,7 +271,7 @@ class MainWindow(QMainWindow):
         newReadings = get_new_readings_moisture()
         add_to_database_moisture(newReadings)
         operations = calculate_need(newReadings)
-        if version == 0:
+        if simulationMode == 0:
             water_plants(operations)
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
