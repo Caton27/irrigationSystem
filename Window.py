@@ -251,9 +251,13 @@ class MainWindow(QMainWindow):
         window.resize(650,450)
 
     def relationships_view(self):
+        self.stackedLayout.removeWidget(self.relationships_layout_widget_with_scroll_area)
+        self.relationships_layout_widget_with_scroll_area = QScrollArea()
+        self.relationships_layout_widget_with_scroll_area.setWidget(RelationshipsWindow())
+        self.stackedLayout.insertWidget(7, self.relationships_layout_widget_with_scroll_area)
         self.stackedLayout.setCurrentIndex(7)
         self.setWindowTitle("Irrigation system - Edit Relationships")
-        window.resize(475,600)
+        window.resize(500,600)
 
     def hardware_view(self):
         self.stackedLayout.setCurrentIndex(8)

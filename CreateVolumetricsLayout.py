@@ -45,8 +45,9 @@ class VolumetricsWindow(QWidget):
         self.timeframeComboBox.addItem("1 year")
         self.timeframeComboBox.addItem("all time")
         self.timeframeComboBox.setFixedWidth(80)
+        self.timeframeComboBox.setCurrentIndex(5)
         self.timeframeComboBox.currentIndexChanged.connect(self.select_timeframe)
-
+                
         self.totalValuesLabel = QLabel("Total Values")
         self.totalValuesLabel.setFont(self.titleFont)
         self.totalValuesLabel.setAlignment(Qt.AlignHCenter)
@@ -64,6 +65,7 @@ class VolumetricsWindow(QWidget):
             for each in self.cursor.fetchall():
                 for each in each:
                     self.totalVolume += float(each)
+                    self.totalVolume = round(self.totalVolume, 2)
             self.totalVolumeString = str(self.totalVolume) + " Litres"
                 
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
@@ -73,6 +75,7 @@ class VolumetricsWindow(QWidget):
             for each in self.cursor.fetchall():
                 for each in each:
                     self.totalCost += float(each)
+                    self.totalCost = round(self.totalCost, 2)
             self.totalCostString = "£" + str(self.totalCost)
             if self.totalCostString[-2] == ".":
                 self.totalCostString += "0"
@@ -170,6 +173,7 @@ class VolumetricsWindow(QWidget):
             for each in self.cursor.fetchall():
                 for each in each:
                     self.totalVolume += float(each)
+                    self.totalVolume = round(self.totalVolume, 2)
             self.totalVolumeString = str(self.totalVolume) + " Litres"
             self.volumeLineEdit.setText(self.totalVolumeString)
 
@@ -182,6 +186,7 @@ class VolumetricsWindow(QWidget):
             for each in self.cursor.fetchall():
                 for each in each:
                     self.totalCost += float(each)
+                    self.totalCost = round(self.totalCost, 2)
             self.totalCostString = "£" + str(self.totalCost)
             if self.totalCostString[-2] == ".":
                 self.totalCostString += "0"
