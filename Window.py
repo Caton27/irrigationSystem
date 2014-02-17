@@ -15,10 +15,18 @@ from CreateQueriesLayout import *
 from CreateAboutLayout import *
 from CreateHelpLayout import *
 
-#if able to use serial, remove "Temp" and uncomment third line down
-from GetReadingsTemp import *
-simulationMode = 1
-#simulationMode = 0
+try:
+    import serial
+    try:
+        ser = serial.Serial("COM3", 9600, timeout = 1)
+        from GetReadings import *
+        simulationMode = 0
+    except:
+        from GetReadingsTemp import *
+        simulationMode = 1
+except ImportError:
+    from GetReadingsTemp import *
+    simulationMode = 1
 
 import sys
 
