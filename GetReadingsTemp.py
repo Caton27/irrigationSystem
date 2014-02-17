@@ -38,11 +38,9 @@ def add_to_database_moisture(newReadings):
         sensorsTemp = []
         cursor.execute("select operationID, readingBeforeID from Operation where readingAfterID = 0")
         operationTemp = cursor.fetchall()
-        print(operationTemp)
         for each in operationTemp:
             cursor.execute("select sensorID from Reading where readingID = ?", (each[0],))
             sensorsTemp.append((cursor.fetchall()[0][0], each[0]))
-        print(sensorsTemp)
         
         for each in newReadings:
             value = (each[4],)
@@ -74,7 +72,6 @@ def add_to_database_moisture(newReadings):
                 if each[4] == each2[0]:
                     cursor.execute("select readingID from Reading where sensorID = ?", (each[4],))
                     results = cursor.fetchall()[-1][0]
-                    print(results)
                     values2 = (results, each2[1])
                     cursor.execute("""UPDATE Operation
                                       SET readingAfterID = ?

@@ -232,9 +232,9 @@ class MainWindow(QMainWindow):
         self.rainfall_layout_widget.select_timeframe()
         self.sunlight_layout_widget.select_timeframe()
 
-    def refresh_values(self):
+    def refresh_values_volumetrics(self):
         self.volumetrics_layout_widget.update_values()
-
+        
 
     def flowerbeds_view(self):
         self.stackedLayout.setCurrentIndex(1)
@@ -301,27 +301,28 @@ class MainWindow(QMainWindow):
         operations = calculate_need(newReadings)
         if simulationMode == 0:
             water_plants(operations)
+        self.refresh_readings_tables_flowerbed()
+        self.refresh_values_volumetrics()
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()
-        self.refresh_readings_tables_flowerbed()
-        self.refresh_values()
+        
 
     def sunlight_reading_view(self):
         newReadings = get_new_readings_sunlight()
         add_to_database_sunlight(newReadings)
+        self.refresh_readings_tables()
         confirm_message = QMessageBox()
         confirm_message.setText("Sunlight reading taken and stored")
         confirm_message.exec_()
-        self.refresh_readings_tables()
 
     def rainfall_reading_view(self):
         newReadings = get_new_readings_rainfall()
         add_to_database_rainfall(newReadings)
+        self.refresh_readings_tables()
         confirm_message = QMessageBox()
         confirm_message.setText("Rainfall reading taken and stored")
         confirm_message.exec_()
-        self.refresh_readings_tables()
     
 if __name__ == "__main__":
     application = QApplication(sys.argv)
