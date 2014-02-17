@@ -24,6 +24,7 @@ def sql_statements():
                   valveID Integer,
                   flowerbedID Integer,
                   rate Float,
+                  hardwareAddress Text,
                   primary key(valveID),
                   foreign key(FlowerbedID) references Flowerbed(flowerbedID)
                   on update cascade on delete restrict)""")

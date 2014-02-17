@@ -240,7 +240,17 @@ def calculate_need(newReadings):
 
 
 def water_plants(operations):
-    pass
+    with sqlite3.connect("FlowerbedDatabase.db") as db:
+        cursor = db.cursor()
+        for each in operations:
+            cursor.execute("select hardwareAddress from Valve where valveID = ?", (each[7],))
+            results = cursor.fetchAll()
+            print(results)
+
+
+
+##dataToSend = "R" + str(each[1]) + "?\n"
+##        ser.write(bytearray(dataToSend,'ascii'))
         
 
 if __name__ == "__main__":

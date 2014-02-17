@@ -194,6 +194,12 @@ class VolumetricsWindow(QWidget):
                 self.totalCostString += ".00"
             self.costLineEdit.setText(self.totalCostString)
 
+    def update_values(self):
+        self.timeframeComboBox.setCurrentIndex(5)
+        self.costLineEdit2.setText(self.totalCostString)
+        self.volumeLineEdit2.setText(self.totalVolumeString)
+                
+
 if __name__ == "__main__":
     application = QApplication(sys.argv)
     volumetricsWindow = VolumetricsWindow()
