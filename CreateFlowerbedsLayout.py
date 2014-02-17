@@ -9,8 +9,9 @@ import datetime
 class FlowerbedsWindow(QWidget):
     """Window"""
     #constructor
-    def __init__(self):
+    def __init__(self, delegate):
         super().__init__()
+        self.delegate = delegate
         self.setWindowTitle("Irigation system - Plants")
 
         self.db = QSqlDatabase.addDatabase("QSQLITE")
@@ -208,6 +209,7 @@ class FlowerbedsWindow(QWidget):
         self.operationModel.setQuery(self.newQuery2)
         self.operationTableView.setModel(self.operationModel)
         self.get_linked()
+        self.timeframeComboBox.setCurrentIndex(5)
 
 
 
@@ -282,6 +284,8 @@ class FlowerbedsWindow(QWidget):
         self.confirmMessage.setText("New flowerbed with ID no. {0} has been created".format(newID[0]))
         self.confirmMessage.exec_()
         self.flowerbedsComboBox.addItem(str(newID[0]))
+
+        self.delegate.refresh_combo_boxes_flowerbed()
 
 
 if __name__ == "__main__":

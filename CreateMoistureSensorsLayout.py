@@ -45,9 +45,8 @@ class MoistureSensorsWindow(QWidget):
         self.moistureSensorsLabel.setFixedWidth(200)
 
         self.moistureSensorsComboBox = QComboBox()
-        for each in moistureSensorsList:
-            self.moistureSensorsComboBox.addItem(str(each))
         self.moistureSensorsComboBox.setFixedWidth(50)
+        self.populate_combo_boxes()
         self.moistureSensorsComboBox.currentIndexChanged.connect(self.select_moisture_sensors)
 
         self.timeframeLabel = QLabel("Timeframe")
@@ -133,6 +132,7 @@ class MoistureSensorsWindow(QWidget):
         self.moistureSensorsModel.setQuery(self.newQuery1)
         self.moistureSensorsTableView.setModel(self.moistureSensorsModel)
         self.get_linked()
+        self.timeframeComboBox.setCurrentIndex(5)
 
     def select_timeframe(self):
         #datetime & PyQtSql
@@ -199,8 +199,16 @@ class MoistureSensorsWindow(QWidget):
         self.moistureSensorLinks.setText("Moisture sensor numbers {0} and {1} are also linked to flowerbed number {2}.".format(self.linked2[0],self.linked2[1],self.linked1))
 
     
-    def temp(self):
-        pass
+    def populate_combo_boxes(self):
+        for each in range(self.moistureSensorsComboBox.__len__()):
+            self.moistureSensorsComboBox.removeItem(0)            
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select sensorID from Sensor where sensorTypeID = 1")
+            moistureSensorsList = []
+            for each1 in self.cursor.fetchall():
+                for each2 in each1:
+                    self.moistureSensorsComboBox.addItem(str(each2))
 
 
 if __name__ == "__main__":

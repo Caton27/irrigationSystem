@@ -175,13 +175,13 @@ class MainWindow(QMainWindow):
 
     def create_windows(self):
         self.initial_layout_widget = InitialLayoutWindow()
-        self.flowerbeds_layout_widget = FlowerbedsWindow()
+        self.flowerbeds_layout_widget = FlowerbedsWindow(self)
         self.moisture_sensors_layout_widget = MoistureSensorsWindow()
         self.sunlight_layout_widget = SunlightWindow()
         self.rainfall_layout_widget = RainfallWindow()
         self.volumetrics_layout_widget = VolumetricsWindow()
         self.plants_layout_widget = PlantsWindow()
-        self.hardware_layout_widget = HardwareWindow()
+        self.hardware_layout_widget = HardwareWindow(self)
         self.queries_layout_widget = QueryWindow()
         self.about_layout_widget = AboutWindow()
         self.help_layout_widget = HelpWindow()
@@ -203,7 +203,6 @@ class MainWindow(QMainWindow):
 
     def add_windows(self):
         self.relationships_layout_widget_with_scroll_area = QLabel()
-        
         self.stackedLayout.addWidget(self.initial_layout_widget)
         self.stackedLayout.addWidget(self.flowerbeds_layout_widget_with_scroll_area) #scroll area
         self.stackedLayout.addWidget(self.moisture_sensors_layout_widget_with_scroll_area)#scroll area
@@ -216,6 +215,23 @@ class MainWindow(QMainWindow):
         self.stackedLayout.addWidget(self.queries_layout_widget)
         self.stackedLayout.addWidget(self.about_layout_widget)
         self.stackedLayout.addWidget(self.help_layout_widget_with_scroll_area)#scroll area
+
+
+    def refresh_combo_boxes_flowerbed(self):
+        self.hardware_layout_widget.populate_combo_boxes()
+        self.plants_layout_widget.populate_combo_boxes()
+
+    def refresh_combo_boxes_sensor(self):
+        self.moisture_sensors_layout_widget.populate_combo_boxes()
+
+    def refresh_readings_tables_flowerbed(self):
+        self.flowerbeds_layout_widget.select_flowerbed()
+        self.moisture_sensors_layout_widget.select_moisture_sensors()
+
+    def refresh_readings_tables(self):
+        self.rainfall_layout_widget.select_timeframe()
+        self.sunlight_layout_widget.select_timeframe()
+
 
     def flowerbeds_view(self):
         self.stackedLayout.setCurrentIndex(1)
@@ -285,6 +301,7 @@ class MainWindow(QMainWindow):
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()
+        self.refresh_readings_tables_flowerbed()
 
     def sunlight_reading_view(self):
         newReadings = get_new_readings_sunlight()
@@ -292,6 +309,7 @@ class MainWindow(QMainWindow):
         confirm_message = QMessageBox()
         confirm_message.setText("Sunlight reading taken and stored")
         confirm_message.exec_()
+        self.refresh_readings_tables()
 
     def rainfall_reading_view(self):
         newReadings = get_new_readings_rainfall()
@@ -299,6 +317,7 @@ class MainWindow(QMainWindow):
         confirm_message = QMessageBox()
         confirm_message.setText("Rainfall reading taken and stored")
         confirm_message.exec_()
+        self.refresh_readings_tables()
     
 if __name__ == "__main__":
     application = QApplication(sys.argv)

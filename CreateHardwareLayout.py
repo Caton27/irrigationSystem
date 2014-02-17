@@ -11,8 +11,9 @@ from CreateMoistureSensorsLayout import *
 class HardwareWindow(QWidget):
     """Window"""
     #constructor
-    def __init__(self):
+    def __init__(self, delegate):
         super().__init__()
+        self.delegate = delegate
         self.setWindowTitle("Irigation system - New hardware")
 
         self.db = QSqlDatabase.addDatabase("QSQLITE")
@@ -67,14 +68,7 @@ class HardwareWindow(QWidget):
 
         self.flowerbedComboBox = QComboBox()
         self.flowerbedComboBox.setFixedWidth(30)
-        self.flowerbedComboBox.addItem("-")
-        with sqlite3.connect("FlowerbedDatabase.db") as db2:
-            self.cursor = db2.cursor()
-            self.cursor.execute("select flowerbedID from Flowerbed")
-            for each in self.cursor.fetchall():
-                for each in each:
-                    self.flowerbedComboBox.addItem(str(each))
-
+        
         self.saveChangesPushButton = QPushButton("Save changes")
         self.saveChangesPushButton.setFixedWidth(100)
         self.saveChangesPushButton.clicked.connect(self.save_changes_sensor)
@@ -111,13 +105,7 @@ class HardwareWindow(QWidget):
 
         self.flowerbedComboBox2 = QComboBox()
         self.flowerbedComboBox2.setFixedWidth(30)
-        self.flowerbedComboBox2.addItem("-")
-        with sqlite3.connect("FlowerbedDatabase.db") as db2:
-            self.cursor = db2.cursor()
-            self.cursor.execute("select flowerbedID from Flowerbed")
-            for each in self.cursor.fetchall():
-                for each in each:
-                    self.flowerbedComboBox2.addItem(str(each))
+        self.populate_combo_boxes()
 
         self.saveChangesPushButton2 = QPushButton("Save changes")
         self.saveChangesPushButton2.setFixedWidth(100)
@@ -184,6 +172,7 @@ class HardwareWindow(QWidget):
                         db2.commit()
                         message = "New moisture sensor added to flowerbed number {0}".format(self.flowerbedText)
                         self.message_box(message)
+                        self.delegate.refresh_combo_boxes_sensor()
 
 ##                        with sqlite3.connect("FlowerbedDatabase.db") as db2:
 ##                            self.cursor = db2.cursor()
@@ -243,7 +232,28 @@ class HardwareWindow(QWidget):
                 message = "New valve added to flowerbed number {0}".format(self.flowerbedText)
                 self.message_box(message)
                 db2.commit()
-                
+
+    def populate_combo_boxes(self):
+        for each in range(self.flowerbedComboBox.__len__()):
+            self.flowerbedComboBox.removeItem(0)
+        self.flowerbedComboBox.addItem("-")
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select flowerbedID from Flowerbed")
+            for each in self.cursor.fetchall():
+                for each in each:
+                    self.flowerbedComboBox.addItem(str(each))
+
+        for each in range(self.flowerbedComboBox2.__len__()):
+            self.flowerbedComboBox2.removeItem(0)
+        self.flowerbedComboBox2.addItem("-")
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select flowerbedID from Flowerbed")
+            for each in self.cursor.fetchall():
+                for each in each:
+                    self.flowerbedComboBox2.addItem(str(each))
+
             
                 
 

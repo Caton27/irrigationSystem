@@ -47,9 +47,8 @@ class PlantsWindow(QWidget):
         self.flowerbedLabel.setFixedWidth(100)
 
         self.flowerbedsComboBox = QComboBox()
-        for each in flowerbedList:
-            self.flowerbedsComboBox.addItem(str(each))
         self.flowerbedsComboBox.setFixedWidth(50)
+        self.populate_combo_boxes()
         self.flowerbedsComboBox.currentIndexChanged.connect(self.select_flowerbed)
 
         self.layout1.addWidget(self.flowerbedLabel)
@@ -328,6 +327,17 @@ class PlantsWindow(QWidget):
         self.calendarWindow.show()
         self.calendarWindow.raise_()
         self.calendarWindow.resize(300,200)
+
+    def populate_combo_boxes(self):
+        for each in range(self.flowerbedsComboBox.__len__()):
+            self.flowerbedsComboBox.removeItem(0)
+        with sqlite3.connect("FlowerbedDatabase.db") as db2:
+            self.cursor = db2.cursor()
+            self.cursor.execute("select flowerbedID from Flowerbed")
+            flowerbedList = []
+            for each1 in self.cursor.fetchall():
+                for each2 in each1:
+                    self.flowerbedsComboBox.addItem(str(each2))
 
 
 if __name__ == "__main__":
