@@ -110,6 +110,7 @@ class FlowerbedsWindow(QWidget):
         self.timeframeComboBox.addItem("1 year")
         self.timeframeComboBox.addItem("all time")
         self.timeframeComboBox.setFixedWidth(80)
+        self.timeframeComboBox.setCurrentIndex(5)
         self.timeframeComboBox.currentIndexChanged.connect(self.select_timeframe)
         
         self.layout3.addWidget(self.timeframeLabel)

@@ -181,7 +181,6 @@ class MainWindow(QMainWindow):
         self.rainfall_layout_widget = RainfallWindow()
         self.volumetrics_layout_widget = VolumetricsWindow()
         self.plants_layout_widget = PlantsWindow()
-        self.relationships_layout_widget = RelationshipsWindow()
         self.hardware_layout_widget = HardwareWindow()
         self.queries_layout_widget = QueryWindow()
         self.about_layout_widget = AboutWindow()
@@ -198,14 +197,13 @@ class MainWindow(QMainWindow):
         self.plants_layout_widget_with_scroll_area = QScrollArea()
         self.plants_layout_widget_with_scroll_area.setWidget(self.plants_layout_widget)
 
-        self.relationships_layout_widget_with_scroll_area = QScrollArea()
-        self.relationships_layout_widget_with_scroll_area.setWidget(self.relationships_layout_widget)
-
         self.help_layout_widget_with_scroll_area = QScrollArea()
         self.help_layout_widget_with_scroll_area.setWidget(self.help_layout_widget)
         
 
     def add_windows(self):
+        self.relationships_layout_widget_with_scroll_area = QLabel()
+        
         self.stackedLayout.addWidget(self.initial_layout_widget)
         self.stackedLayout.addWidget(self.flowerbeds_layout_widget_with_scroll_area) #scroll area
         self.stackedLayout.addWidget(self.moisture_sensors_layout_widget_with_scroll_area)#scroll area
@@ -228,7 +226,6 @@ class MainWindow(QMainWindow):
         self.stackedLayout.setCurrentIndex(2)
         self.setWindowTitle("Irrigation system - View Moisture Sensors")
         window.resize(500,450)
-
 
     def sunlight_view(self):
         self.stackedLayout.setCurrentIndex(3)
