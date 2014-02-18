@@ -185,7 +185,6 @@ class MainWindow(QMainWindow):
         self.queries_layout_widget = QueryWindow()
         self.about_layout_widget = AboutWindow()
         self.help_layout_widget = HelpWindow()
-        
 
     def add_scroll_areas(self):
         self.flowerbeds_layout_widget_with_scroll_area = QScrollArea()
@@ -199,7 +198,6 @@ class MainWindow(QMainWindow):
 
         self.help_layout_widget_with_scroll_area = QScrollArea()
         self.help_layout_widget_with_scroll_area.setWidget(self.help_layout_widget)
-        
 
     def add_windows(self):
         self.relationships_layout_widget_with_scroll_area = QLabel()
@@ -306,7 +304,6 @@ class MainWindow(QMainWindow):
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()
-        
 
     def sunlight_reading_view(self):
         newReadings = get_new_readings_sunlight()
