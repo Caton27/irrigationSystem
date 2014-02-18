@@ -240,15 +240,14 @@ def water_plants(operations):
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         for each in operations:
+            ser = serial.Serial('COM3', 9600, timeout = 10)
             cursor.execute("select hardwareAddress from Valve where valveID = ?", (each[7],))
-            results = cursor.fetchAll()
-            print(results)
+            results = cursor.fetchAll()[0][0]
+            dataToSend = "W" + str(results) + "," + str(each[2]) + "?\n"
+            ser.write(bytearray(dataToSend, "ascii"))
+            ser.close()
 
 
-
-##dataToSend = "R" + str(each[1]) + "?\n"
-##        ser.write(bytearray(dataToSend,'ascii'))
-        
 
 if __name__ == "__main__":
     newReadings = get_new_readings_moisture()
