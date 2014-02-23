@@ -49,12 +49,16 @@ class HardwareWindow(QWidget):
         self.addSensorLabel.setAlignment(Qt.AlignLeft)
         
         self.sensorTypeLabel = QLabel("Sensor type")
-        self.sensorTypeLabel.setFixedWidth(200)
+        self.sensorTypeLabel.setFixedWidth(150)
         self.sensorTypeLabel.setFont(self.subtitleFont)
 
         self.flowerbedLabel = QLabel("Flowerbed")
-        self.flowerbedLabel.setFixedWidth(200)
+        self.flowerbedLabel.setFixedWidth(100)
         self.flowerbedLabel.setFont(self.subtitleFont)
+
+        self.hardwareAddressLabel = QLabel("Hardware address")
+        self.hardwareAddressLabel.setFont(self.subtitleFont)
+        self.hardwareAddressLabel.setFixedWidth(120)
 
         self.sensorTypeComboBox = QComboBox()
         self.sensorTypeComboBox.setFixedWidth(70)
@@ -68,6 +72,9 @@ class HardwareWindow(QWidget):
 
         self.flowerbedComboBox = QComboBox()
         self.flowerbedComboBox.setFixedWidth(30)
+
+        self.hardwareAddressLineEdit = QLineEdit()
+        self.hardwareAddressLineEdit.setFixedWidth(120)
         
         self.saveChangesPushButton = QPushButton("Save changes")
         self.saveChangesPushButton.setFixedWidth(100)
@@ -75,6 +82,8 @@ class HardwareWindow(QWidget):
 
         self.temp = QLabel("")
         self.temp.setFixedWidth(2)
+        self.temp2 = QLabel("")
+        self.temp2.setFixedWidth(2)
         
         self.layout1_1 = QVBoxLayout()
         self.layout1_1.addWidget(self.sensorTypeLabel)
@@ -88,8 +97,15 @@ class HardwareWindow(QWidget):
         self.layout1_2.addWidget(self.temp)
         self.layout1_2.setAlignment(Qt.AlignLeft)
 
+        self.layout1_3 = QVBoxLayout()
+        self.layout1_3.addWidget(self.hardwareAddressLabel)
+        self.layout1_3.addWidget(self.hardwareAddressLineEdit)
+        self.layout1_3.addWidget(self.temp2)
+        self.layout1_3.setAlignment(Qt.AlignLeft)
+
         self.layout1.addLayout(self.layout1_1)
         self.layout1.addLayout(self.layout1_2)
+        self.layout1.addLayout(self.layout1_3)
         self.layout1.setAlignment(Qt.AlignTop)
 
 
@@ -151,6 +167,7 @@ class HardwareWindow(QWidget):
     def save_changes_sensor(self):
         self.sensorTypeText = self.sensorTypeComboBox.currentIndex()
         self.flowerbedText = self.flowerbedComboBox.currentIndex()
+        self.hardwareAddressText = self.hardwareAddressLineEdit.text()
         if self.sensorTypeText == 1 and self.flowerbedText == 0:
             message = """The following errors occurred when processing the entered values:
 > No flowerbed ID number was selected (Required for moisture sensors)"""
@@ -165,43 +182,39 @@ class HardwareWindow(QWidget):
                 if len(self.cursor.fetchall()) < 3:
                     with sqlite3.connect("FlowerbedDatabase.db") as db2:
                         self.cursor = db2.cursor()
-                        values = (1,int(self.flowerbedText))
+                        values = (1,int(self.flowerbedText),self.hardwareAddressText)
                         self.cursor.execute("""insert into Sensor(
-                                               sensorTypeID, flowerbedID)
-                                               values(?,?)""", values)
+                                               sensorTypeID, flowerbedID, hardwareAddress)
+                                               values(?,?,?)""", values)
                         db2.commit()
                         message = "New moisture sensor added to flowerbed number {0}".format(self.flowerbedText)
                         self.message_box(message)
                         self.delegate.refresh_combo_boxes_sensor()
-
-##                        with sqlite3.connect("FlowerbedDatabase.db") as db2:
-##                            self.cursor = db2.cursor()
-##                            self.cursor.execute("select sensorID from Sensor")
-
+                        
                 else:
                     message = """The following errors occurred when processing the entered values:
 > Flowerbed number {0} already has the maximum number of moisture sensors""".format(self.flowerbedText)
                     self.message_box(message)
                 
-                
+                #####
         elif self.sensorTypeText == 2:
             with sqlite3.connect("FlowerbedDatabase.db") as db2:
                 self.cursor = db2.cursor()
-                values = (2,0)
+                values = (2,0,self.hardwareAddressText)
                 self.cursor.execute("""insert into Sensor(
-                                       sensorTypeID, flowerbedID)
-                                       values(?,?)""", values)
+                                       sensorTypeID, flowerbedID, hardwareAddress)
+                                       values(?,?,?)""", values)
                 db2.commit()
                 message = "New sunlight sensor added"
                 self.message_box(message)
-                
+                #####
         elif self.sensorTypeText == 3:
             with sqlite3.connect("FlowerbedDatabase.db") as db2:
                 self.cursor = db2.cursor()
-                values = (3,0)
+                values = (3,0,self.hardwareAddressText)
                 self.cursor.execute("""insert into Sensor(
-                                       sensorTypeID, flowerbedID)
-                                       values(?,?)""", values)
+                                       sensorTypeID, flowerbedID, hardwareAddress)
+                                       values(?,?,?)""", values)
                 db2.commit()
                 message = "New rain sensor added"
                 self.message_box(message)                        
