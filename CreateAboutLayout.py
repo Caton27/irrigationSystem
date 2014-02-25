@@ -30,7 +30,8 @@ class AboutWindow(QWidget):
         #widgets
         self.aboutLabel = QLabel("About")
         self.aboutLabel.setFont(self.titleFont)
-        
+
+        #program initiated describes when the program was run
         self.theDate = datetime.datetime.today()
         self.theDate = self.theDate.strftime("%d/%m/%Y %H:%M.%S")
         self.aboutText = QLabel("""Program initially created:

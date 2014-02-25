@@ -12,7 +12,7 @@ class FlowerbedsWindow(QWidget):
     def __init__(self, delegate):
         super().__init__()
         self.delegate = delegate
-        self.setWindowTitle("Irigation system - Plants")
+        self.setWindowTitle("Irigation system - Flowerbeds")
 
         self.db = QSqlDatabase.addDatabase("QSQLITE")
         self.db.setDatabaseName("FlowerbedDatabase.db")
@@ -33,6 +33,7 @@ class FlowerbedsWindow(QWidget):
             flowerbedList = []
             for each1 in self.cursor.fetchall():
                 for each2 in each1:
+                    #flowerbedList includes all current flowerbedIDs
                     flowerbedList.append(each2)
 
         self.flowerbeds_layout = QVBoxLayout()
@@ -121,6 +122,8 @@ class FlowerbedsWindow(QWidget):
         #layout 4
         self.operationTableView = QTableView()
         self.operationQuery = QSqlQuery()
+        #the following query uses cross joins to get 2 different
+        #readings from the same table with different foreign keys
         self.operationQuery.prepare("""SELECT
                                        Operation.date as "Date",
                                        Operation.time as "Time",
@@ -136,7 +139,6 @@ class FlowerbedsWindow(QWidget):
                                        AND Operation.readingBeforeID = reading_before.readingID
                                        AND Operation.readingAfterID = reading_after.readingID""")
 
-        #union
         self.operationQuery.addBindValue(self.currentFlowerbedID)
         self.operationQuery.exec_()
         
@@ -255,6 +257,7 @@ class FlowerbedsWindow(QWidget):
         self.operationTableView.setModel(self.operationModel)
         
 
+    #retives relationships between the current flowerbed and which sensors have it as a foreign key
     def get_linked(self):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
@@ -270,6 +273,7 @@ class FlowerbedsWindow(QWidget):
         self.flowerbedLinks.setText("This flowerbed is currently linked to moisture sensors number {0}, {1} and {2}.".format(self.linked[0],self.linked[1],self.linked[2]))
 
 
+    #adding a new flowerbed to the database
     def add_flowerbed(self):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
@@ -285,6 +289,7 @@ class FlowerbedsWindow(QWidget):
         self.confirmMessage.exec_()
         self.flowerbedsComboBox.addItem(str(newID[0]))
 
+        #references a function in RunMe that refreshes flowerbed combo boxes
         self.delegate.refresh_combo_boxes_flowerbed()
 
 

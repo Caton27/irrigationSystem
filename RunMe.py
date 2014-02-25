@@ -15,6 +15,8 @@ from CreateQueriesLayout import *
 from CreateAboutLayout import *
 from CreateHelpLayout import *
 
+#this try loop checks 2 things; if PySerial is installed and if anything is plugged in to the serial port
+#if either of these are false, a different file involving randomly generated readings is imported instead
 try:
     import serial
     try:
@@ -169,10 +171,8 @@ class MainWindow(QMainWindow):
         self.readingsMenu.addAction(self.sunlightAction)
         self.readingsMenu.addAction(self.rainfallAction)
 
-
-    def temp():
-        pass
-
+        
+    #creates widgets for each screen within the program from the imported classes
     def create_windows(self):
         self.initial_layout_widget = InitialLayoutWindow()
         self.flowerbeds_layout_widget = FlowerbedsWindow(self)
@@ -186,6 +186,8 @@ class MainWindow(QMainWindow):
         self.about_layout_widget = AboutWindow()
         self.help_layout_widget = HelpWindow()
 
+
+    #adds scroll areas to abnormaly/potentially large widgets
     def add_scroll_areas(self):
         self.flowerbeds_layout_widget_with_scroll_area = QScrollArea()
         self.flowerbeds_layout_widget_with_scroll_area.setWidget(self.flowerbeds_layout_widget)
@@ -199,6 +201,8 @@ class MainWindow(QMainWindow):
         self.help_layout_widget_with_scroll_area = QScrollArea()
         self.help_layout_widget_with_scroll_area.setWidget(self.help_layout_widget)
 
+
+    #adds each widget to the QStackedLayout
     def add_windows(self):
         self.relationships_layout_widget_with_scroll_area = QLabel()
         self.stackedLayout.addWidget(self.initial_layout_widget)
@@ -215,21 +219,26 @@ class MainWindow(QMainWindow):
         self.stackedLayout.addWidget(self.help_layout_widget_with_scroll_area)#scroll area
 
 
+    #re-populates all flowerbed combo-boxes throughout the program
     def refresh_combo_boxes_flowerbed(self):
         self.hardware_layout_widget.populate_combo_boxes()
         self.plants_layout_widget.populate_combo_boxes()
 
+    #re-populates all sensor combo-boxes throughout the program
     def refresh_combo_boxes_sensor(self):
         self.moisture_sensors_layout_widget.populate_combo_boxes()
 
+    #re-populates the readings table view in the Flowerbed widget
     def refresh_readings_tables_flowerbed(self):
         self.flowerbeds_layout_widget.select_flowerbed()
         self.moisture_sensors_layout_widget.select_moisture_sensors()
 
+    #re-populates sunlight and rainfall readings table views
     def refresh_readings_tables(self):
         self.rainfall_layout_widget.select_timeframe()
         self.sunlight_layout_widget.select_timeframe()
 
+    #updates the values displayed in volumetrics
     def refresh_values_volumetrics(self):
         self.volumetrics_layout_widget.update_values()
         
@@ -264,6 +273,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Irrigation system - Edit Plants")
         window.resize(650,450)
 
+    #when this function is called, the relationships widget is re-created
     def relationships_view(self):
         self.stackedLayout.removeWidget(self.relationships_layout_widget_with_scroll_area)
         self.relationships_layout_widget_with_scroll_area = QScrollArea()
@@ -293,30 +303,40 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Irrigation system - Help")
         window.resize(400,450)
 
+    #takes a reading for all moisture sensors
     def moisture_reading_view(self):
         newReadings = get_new_readings_moisture()
         add_to_database_moisture(newReadings)
         operations = calculate_need(newReadings)
         if simulationMode == 0:
+            #if the correct hardware is present, plants will be watered
             water_plants(operations)
+        #once the readings have been taken, the relevant tables are updated
         self.refresh_readings_tables_flowerbed()
         self.refresh_values_volumetrics()
+        #message box informing the user that a reading has been taken
         confirm_message = QMessageBox()
         confirm_message.setText("Moisture sensor reading(s) taken and stored")
         confirm_message.exec_()
 
+    #takes a reading for all sunlight sensors
     def sunlight_reading_view(self):
         newReadings = get_new_readings_sunlight()
         add_to_database_sunlight(newReadings)
+        #once the readings have been taken, the relevant tables are updated
         self.refresh_readings_tables()
+        #message box informing the user that a reading has been taken
         confirm_message = QMessageBox()
         confirm_message.setText("Sunlight reading taken and stored")
         confirm_message.exec_()
 
+    #takes a reading for all rainfall sensors
     def rainfall_reading_view(self):
         newReadings = get_new_readings_rainfall()
         add_to_database_rainfall(newReadings)
+        #once the readings have been taken, the relevant tables are updated
         self.refresh_readings_tables()
+        #message box informing the user that a reading has been taken
         confirm_message = QMessageBox()
         confirm_message.setText("Rainfall reading taken and stored")
         confirm_message.exec_()
