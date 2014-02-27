@@ -28,6 +28,7 @@ class MoistureSensorsWindow(QWidget):
             moistureSensorsList = []
             for each1 in self.cursor.fetchall():
                 for each2 in each1:
+                    #moistureSensorsList stores each sensorID that belongs to a moisture sensor
                     moistureSensorsList.append(each2)
 
         self.moisture_sensors_layout = QVBoxLayout()
@@ -46,6 +47,8 @@ class MoistureSensorsWindow(QWidget):
 
         self.moistureSensorsComboBox = QComboBox()
         self.moistureSensorsComboBox.setFixedWidth(50)
+
+        #calls a function that populates the existing combo box with all sensorID's required
         self.populate_combo_boxes()
         self.moistureSensorsComboBox.currentIndexChanged.connect(self.select_moisture_sensors)
 
@@ -60,6 +63,7 @@ class MoistureSensorsWindow(QWidget):
         self.timeframeComboBox.addItem("1 year")
         self.timeframeComboBox.addItem("all time")
         self.timeframeComboBox.setFixedWidth(80)
+        #sets default item to "all time"
         self.timeframeComboBox.setCurrentIndex(5)
         self.timeframeComboBox.currentIndexChanged.connect(self.select_timeframe)
 
@@ -74,6 +78,7 @@ class MoistureSensorsWindow(QWidget):
         self.moistureSensorsTableView = QTableView()
         self.currentMoistureSensorsID = self.moistureSensorsComboBox.currentIndex() + 3
         self.moistureSensorsQuery = QSqlQuery()
+        #prepares query to select revelant data - no timeframe limitation initially
         self.moistureSensorsQuery.prepare("""SELECT
                                        date as "Date",
                                        time as "Time",
@@ -95,12 +100,18 @@ class MoistureSensorsWindow(QWidget):
         self.layout2.setAlignment(Qt.AlignTop)
 
         #links
+        #new font created for subtext
         self.infoFont = QFont()
         self.infoFont.setPointSize(8)
 
+        #2 empty label for relationships between sensors and flowerbeds
         self.flowerbedLinks = QLabel()
         self.moistureSensorLinks = QLabel()
+
+        #calls funtion to retrieve relationships from the database
+        #populates the 2 aforementioned labels
         self.get_linked()
+        
         self.flowerbedLinks.setFont(self.infoFont)
         self.flowerbedLinks.setAlignment(Qt.AlignBottom)
         self.moistureSensorLinks.setFont(self.infoFont)
@@ -118,6 +129,8 @@ class MoistureSensorsWindow(QWidget):
         return self.moisture_sensors_layout_widget
 
     def select_moisture_sensors(self):
+        #this function is referenced when the moisture sensor combo box index is changed
+        #the tableView is re-created with the new data
         self.currentMoistureSensorsID = self.moistureSensorsComboBox.currentIndex() + 3
         self.newQuery1 = QSqlQuery()
         self.newQuery1.prepare("""SELECT
@@ -135,7 +148,8 @@ class MoistureSensorsWindow(QWidget):
         self.timeframeComboBox.setCurrentIndex(5)
 
     def select_timeframe(self):
-        #datetime & PyQtSql
+        #this function is referenced when the timeframe combo box index is changed
+        #the tableView is re-created with the new data
         self.currentTimeframe = self.timeframeComboBox.currentIndex()
         if self.currentTimeframe == 0:
             self.comparisonDate = datetime.timedelta(1)
@@ -151,9 +165,11 @@ class MoistureSensorsWindow(QWidget):
             self.comparisonDate = datetime.timedelta(99999)
         else:
             pass
+        #self.compareDate represents the oldest date readings should be present from
         self.compareDate = datetime.datetime.today() - self.comparisonDate
         self.compareDate = self.compareDate.strftime("%Y/%m/%d")
         self.newQuery2 = QSqlQuery()
+        #prepars the query with a date filter added
         self.newQuery2.prepare("""SELECT
                                   date as "Date",
                                   time as "Time",
@@ -170,6 +186,7 @@ class MoistureSensorsWindow(QWidget):
         
 
     def get_linked(self):
+        #this funtion retrieves relationships from the database and populates the 2 subtext labels
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
             values = (self.currentMoistureSensorsID,)
@@ -178,10 +195,13 @@ class MoistureSensorsWindow(QWidget):
                 for each in each:
                     self.linked1 = each
             try:
+                #queries self.linked1 for whether a value is present
                 if len(str(self.linked1)) == 0:
+                    #N/A represents no flowerbed the sensor is linked to
                     self.linked1 = "N/A"
             except AttributeError:
                 self.linked1 = "N/A"
+        #sets the text to show the flowerbed the sensor is linked to
         self.flowerbedLinks.setText("""This moisture sensor is currently linked to flowerbed number {0}.""".format(self.linked1))
         
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
@@ -195,12 +215,16 @@ class MoistureSensorsWindow(QWidget):
                     if str(each) != str(self.currentMoistureSensorsID):
                         self.linked2.append(each)
             while len(self.linked2) < 2:
+                #N/A represents no other sensor linked to the flowerbed
                 self.linked2.append("N/A")
+        #sets the text to show other sensors linked to the same flowerbed
         self.moistureSensorLinks.setText("Moisture sensor numbers {0} and {1} are also linked to flowerbed number {2}.".format(self.linked2[0],self.linked2[1],self.linked1))
 
     
     def populate_combo_boxes(self):
+        #this function populates the moisture sensor combo box with all relevant sensorIDs
         for each in range(self.moistureSensorsComboBox.__len__()):
+            #the combo box is cleared of all values
             self.moistureSensorsComboBox.removeItem(0)            
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
@@ -208,6 +232,7 @@ class MoistureSensorsWindow(QWidget):
             moistureSensorsList = []
             for each1 in self.cursor.fetchall():
                 for each2 in each1:
+                    #each new value is added to the combo box
                     self.moistureSensorsComboBox.addItem(str(each2))
 
 

@@ -37,7 +37,8 @@ class HelpWindow(QWidget):
         self.faqLabel.setFont(self.titleFont)
         self.help_layout.addWidget(self.faqLabel)
 
-        #faq
+        #faq questions
+        #temporary values until faq produced
         self.questions = []
         self.questions.append("Question 1")
         self.questions.append("Question 2")
@@ -45,6 +46,8 @@ class HelpWindow(QWidget):
         self.questions.append("Question 4")
         self.questions.append("Question 5")
 
+        #faq answers
+        #temporary values until faq produced
         self.answers = []
         self.answers.append("""This piece of text represents the answer to question 1
 
@@ -66,7 +69,8 @@ class HelpWindow(QWidget):
         for each in self.questions:
             self.questionLabel = QLabel("{0}. {1}:".format(num + 1, each))
             self.questionLabel.setFont(self.subtitleFont)
-            
+
+            #enables text wrapping when window resized
             self.answerLabel = QLabel(self.answers[num])
             self.answerLabel.setWordWrap(True)
             num += 1
