@@ -25,7 +25,9 @@ class RainfallWindow(QWidget):
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
             self.cursor = db2.cursor()
             self.cursor.execute("select readingID from Reading where readingTypeID = 3")
+            #self.numReadings holds how many total rainfall readings there are
             self.numReadings = len(self.cursor.fetchall())
+        #determines the maximum allowed height of the table based on the number of readings available
         self.maxHeight = 115 + 30 * (self.numReadings - 3)
 
         self.rainfall_layout = QVBoxLayout()
@@ -49,6 +51,7 @@ class RainfallWindow(QWidget):
         self.timeframeComboBox.addItem("1 year")
         self.timeframeComboBox.addItem("all time")
         self.timeframeComboBox.setFixedWidth(80)
+        #index initially set to "all time"
         self.timeframeComboBox.setCurrentIndex(5)
         self.timeframeComboBox.currentIndexChanged.connect(self.select_timeframe)
 
@@ -91,7 +94,8 @@ class RainfallWindow(QWidget):
 
 
     def select_timeframe(self):
-        #datetime & PyQtSql
+        #this function is referenced when the timeframe combo box index is changed
+        #the tableView is re-created with the new data
         self.currentTimeframe = self.timeframeComboBox.currentIndex()
         if self.currentTimeframe == 0:
             self.comparisonDate = datetime.timedelta(1)
@@ -107,9 +111,11 @@ class RainfallWindow(QWidget):
             self.comparisonDate = datetime.timedelta(99999)
         else:
             pass
+        #self.compareDate represents the oldest date readings should be present from
         self.compareDate = datetime.datetime.today() - self.comparisonDate
         self.compareDate = self.compareDate.strftime("%Y/%m/%d")
         self.newQuery = QSqlQuery()
+        #prepares the query with a date filter added
         self.newQuery.prepare("""SELECT
                                       date as "Date",
                                       time as "Time",

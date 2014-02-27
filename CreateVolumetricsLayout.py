@@ -45,6 +45,7 @@ class VolumetricsWindow(QWidget):
         self.timeframeComboBox.addItem("1 year")
         self.timeframeComboBox.addItem("all time")
         self.timeframeComboBox.setFixedWidth(80)
+        #the index is initially set to "all time"
         self.timeframeComboBox.setCurrentIndex(5)
         self.timeframeComboBox.currentIndexChanged.connect(self.select_timeframe)
                 
@@ -64,8 +65,11 @@ class VolumetricsWindow(QWidget):
             self.cursor.execute("select amount from Operation")
             for each in self.cursor.fetchall():
                 for each in each:
+                    #amount pulled from each operation then added to a total
                     self.totalVolume += float(each)
-                    self.totalVolume = round(self.totalVolume, 2)
+            #rounded to 2 decimal places
+            self.totalVolume = round(self.totalVolume, 2)
+            #trailing "Litres" added for context
             self.totalVolumeString = str(self.totalVolume) + " Litres"
                 
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
@@ -74,12 +78,17 @@ class VolumetricsWindow(QWidget):
             self.cursor.execute("select cost from Operation")
             for each in self.cursor.fetchall():
                 for each in each:
+                    #cost pulled from each operation then added to a total
                     self.totalCost += float(each)
-                    self.totalCost = round(self.totalCost, 2)
+            #rounded to 2 decimal places
+            self.totalCost = round(self.totalCost, 2)
+            #leading "£" added for context
             self.totalCostString = "£" + str(self.totalCost)
             if self.totalCostString[-2] == ".":
+                #adds trailing "0" if necessary
                 self.totalCostString += "0"
             elif len(self.totalCostString) == 2:
+                #adds trailing ".00" if necessary
                 self.totalCostString += ".00"
             
         self.volumeWaterLabel2 = QLabel("Volume of water used:")
@@ -88,6 +97,7 @@ class VolumetricsWindow(QWidget):
         self.volumeLineEdit2 = QLineEdit()
         self.volumeLineEdit2.setFixedWidth(100)
         self.volumeLineEdit2.setText(self.totalVolumeString)
+        #sets so that the volume line edit cannot be edited
         self.volumeLineEdit2.setReadOnly(True)
 
         self.costLabel2 = QLabel("Cost:")
@@ -96,6 +106,7 @@ class VolumetricsWindow(QWidget):
         self.costLineEdit2 = QLineEdit()
         self.costLineEdit2.setFixedWidth(100)
         self.costLineEdit2.setText(self.totalCostString)
+        #sets so that the cost line edit cannot be edited
         self.costLineEdit2.setReadOnly(True)
         
         self.layout3.addWidget(self.volumeWaterLabel2,0,2)
@@ -111,6 +122,7 @@ class VolumetricsWindow(QWidget):
         self.volumeLineEdit = QLineEdit()
         self.volumeLineEdit.setFixedWidth(100)
         self.volumeLineEdit.setText(self.totalVolumeString)
+        #sets so that the volume line edit cannot be edited
         self.volumeLineEdit.setReadOnly(True)
 
         self.costLabel = QLabel("Cost:")
@@ -119,6 +131,7 @@ class VolumetricsWindow(QWidget):
         self.costLineEdit = QLineEdit()
         self.costLineEdit.setFixedWidth(100)
         self.costLineEdit.setText(self.totalCostString)
+        #sets so that the cost line edit cannot be edited
         self.costLineEdit.setReadOnly(True)
 
         self.layout2.addWidget(self.volumeWaterLabel,0,0)
@@ -145,6 +158,8 @@ class VolumetricsWindow(QWidget):
         return self.volumetrics_layout_widget
 
     def select_timeframe(self):
+        #this function is referenced when the timeframe combo box index is changed
+        #the tableView is re-created with the new data
         self.currentTimeframe = self.timeframeComboBox.currentIndex()
         if self.currentTimeframe == 0:
             self.comparisonDate = datetime.timedelta(1)
@@ -160,6 +175,7 @@ class VolumetricsWindow(QWidget):
             self.comparisonDate = datetime.timedelta(99999)
         else:
             pass
+        #self.compareDate represents the oldest date readings should be present from
         self.compareDate = datetime.datetime.today() - self.comparisonDate
         self.compareDate = self.compareDate.strftime("%Y/%m/%d")
         values = (self.compareDate,)
@@ -172,10 +188,12 @@ class VolumetricsWindow(QWidget):
                                    where date > ?""",values)
             for each in self.cursor.fetchall():
                 for each in each:
+                    #amount pulled from each operation then added to a total
                     self.totalVolume += float(each)
-                    self.totalVolume = round(self.totalVolume, 2)
+            #rounded to 2 decimal places
+            self.totalVolume = round(self.totalVolume, 2)
+            #trailing "Litres" added for context
             self.totalVolumeString = str(self.totalVolume) + " Litres"
-            self.volumeLineEdit.setText(self.totalVolumeString)
 
         #cost
         with sqlite3.connect("FlowerbedDatabase.db") as db2:
@@ -183,20 +201,28 @@ class VolumetricsWindow(QWidget):
             self.cursor = db2.cursor()
             self.cursor.execute("""select cost from Operation
                                    where date > ?""",values)
-            for each in self.cursor.fetchall():
+           for each in self.cursor.fetchall():
                 for each in each:
+                    #cost pulled from each operation then added to a total
                     self.totalCost += float(each)
-                    self.totalCost = round(self.totalCost, 2)
+            #rounded to 2 decimal places
+            self.totalCost = round(self.totalCost, 2)
+            #leading "£" added for context
             self.totalCostString = "£" + str(self.totalCost)
             if self.totalCostString[-2] == ".":
+                #adds trailing "0" if necessary
                 self.totalCostString += "0"
             elif len(self.totalCostString) == 2:
+                #adds trailing ".00" if necessary
                 self.totalCostString += ".00"
-            self.costLineEdit.setText(self.totalCostString)
 
     def update_values(self):
+        #this function is called when a new operation is performed
+        #the timeframe is reset to "all time"
         self.timeframeComboBox.setCurrentIndex(5)
+        #the new values are retrieved
         self.select_timeframe()
+        #the total line edits are updated
         self.costLineEdit2.setText(self.totalCostString)
         self.volumeLineEdit2.setText(self.totalVolumeString)
                 

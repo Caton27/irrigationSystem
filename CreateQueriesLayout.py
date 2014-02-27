@@ -34,6 +34,7 @@ class QueryWindow(QWidget):
         self.queryLabel = QLabel("Query")
         self.queryLabel.setFont(self.titleFont)
 
+        #QTextEdit used instead of QLineEdit because of multiple line use
         self.queryTextEdit = QTextEdit()
 
         self.executeQueryPushButton = QPushButton("Execute query")
@@ -81,6 +82,8 @@ class QueryWindow(QWidget):
         return self.query_layout_widget
 
     def execute_query(self):
+        #this function pulls the query from the text edit field converts it to plain text and executes it as a query
+        #the results are then displayed in a table view
         self.customQueryText = self.queryTextEdit.toPlainText()
         self.newQuery = QSqlQuery()
         self.newQuery.prepare(self.customQueryText)
@@ -89,6 +92,7 @@ class QueryWindow(QWidget):
         self.customTableView.setModel(self.customModel)
 
     def clear_fields(self):
+        #this function clears the text edit field as well as any results in the table view
         self.queryTextEdit.clear()
         self.execute_query()
 

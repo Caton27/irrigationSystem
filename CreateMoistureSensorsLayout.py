@@ -169,7 +169,7 @@ class MoistureSensorsWindow(QWidget):
         self.compareDate = datetime.datetime.today() - self.comparisonDate
         self.compareDate = self.compareDate.strftime("%Y/%m/%d")
         self.newQuery2 = QSqlQuery()
-        #prepars the query with a date filter added
+        #prepares the query with a date filter added
         self.newQuery2.prepare("""SELECT
                                   date as "Date",
                                   time as "Time",
