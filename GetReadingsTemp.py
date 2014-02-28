@@ -10,28 +10,37 @@ universalCost = 0.00205
 
 
 def get_new_readings_moisture():
+    #this function generates a reading for each moisture sensor present in the system
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 1")
         sensorValues = cursor.fetchall()
+        #the number of moisture sensors that are present in the database
         numSensors = len(sensorValues)
     
     newReadings = []
     
-    #random
+    #for each sensor returned from the database
     for each in sensorValues:
+        #intended minimum value is 0, intended maximum value is 2
+        #a reading of 2 is not possible, the actual maximum is 1.999
+        #step-by step creates the random number as a string
         newReading = str(random.randint(0,1))
         newReading += "."
         newReading += str(random.randint(0,9))
         newReading += str(random.randint(0,9))
         newReading += str(random.randint(0,9))
+        #converts to float
         newReading = float(newReading)
         now = datetime.datetime.today()
+        #new readings is a list holding the reading for the moisture sensor
         newReadings.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"), newReading, "TEMPORARY", each[0], 1])
     return newReadings
 
 
 def add_to_database_moisture(newReadings):
+    #this function adds the moisture readings to the database
+    #aswell as calculating the average reading
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
 
@@ -51,6 +60,7 @@ def add_to_database_moisture(newReadings):
             for each2 in cursor.fetchall():
                 for each2 in each2:
                     temp.append(each2)
+            #variables set up to enable calculation of the average reading
             totalReading = 0
             numReadings = 0
             for each2 in newReadings:
@@ -58,6 +68,7 @@ def add_to_database_moisture(newReadings):
                     totalReading += each2[2]
                     numReadings += 1
             averageReading = totalReading / numReadings
+            #rounded to 3 decimal places
             averageReading = round(averageReading,3)
             each[3] = averageReading
             values = (each[0],each[1],each[2],each[3],each[4],each[5])
@@ -67,7 +78,7 @@ def add_to_database_moisture(newReadings):
                               values(?,?,?,?,?,?)""", values)
             db.commit()
             
-            
+            #inserts readingAfterID into operations
             for each2 in sensorsTemp:
                 if each[4] == each2[0]:
                     cursor.execute("select readingID from Reading where sensorID = ?", (each[4],))
@@ -80,26 +91,35 @@ def add_to_database_moisture(newReadings):
             
 
 def get_new_readings_sunlight():
+    #this function generates a reading for each sunlight sensor present in the system
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 2")
         sensorValues = cursor.fetchall()
+        #the number of sunlight sensors that are present in the database
         numSensors = len(sensorValues)
     
     newReadings = []
     
-    #random
+    #for each sensor returned from the database
     for each in sensorValues:
+        #intended minimum value is 0, intended maximum value is 1000
+        #a reading of 1000 is not possible, the actual maximum is 999.9
+        #realistic readings between 300 and 800 are used
+        #step-by step creates the random number as a string
         newReading = str(random.randint(300,800))
         newReading += "."
         newReading += str(random.randint(0,9))
+        #converts to float
         newReading = float(newReading)
         now = datetime.datetime.today()
+        #new readings is a list holding the reading for the sunlight sensor
         newReadings.append([now.strftime("%Y/%m/%d"),"-", newReading, "-", each[0], 2])
     return newReadings
 
 
 def add_to_database_sunlight(newReadings):
+    #this function adds the sunlight readings to the database
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         for each in newReadings:
@@ -112,28 +132,37 @@ def add_to_database_sunlight(newReadings):
 
 
 def get_new_readings_rainfall():
+    #this function generates a reading for each rainfall sensor present in the system
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 3")
         sensorValues = cursor.fetchall()
+        #the number of rainfall sensors that are present in the database
         numSensors = len(sensorValues)
     
     newReadings = []
 
-    #random
+    #for each sensor returned from the database
     for each in sensorValues:
+        #intended minimum value is 0, intended maximum value is 86400 for duration
+        #intended minimum value is 0, intended maximum value is 10 for depth
+        #a reading of 10 is not possible, the actual maximum is 9.999
+        #step-by step creates the random number as a string
         newReading2 = str(random.randint(0,9))
         newReading2 += "."
         newReading2 += str(random.randint(0,9))
         newReading2 += str(random.randint(0,9))
         newReading2 += str(random.randint(0,9))
+        #creates the duration in 1 step
         newReading = random.randint(1,86400)
         now = datetime.datetime.today()
+        #new readings is a list holding the reading for the moisture sensor
         newReadings.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"), newReading, newReading2, each[0], 3])
     return newReadings
 
 
 def add_to_database_rainfall(newReadings):
+    #this function adds the rainfall readings to the database
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         for each in newReadings:

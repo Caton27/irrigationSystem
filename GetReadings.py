@@ -7,27 +7,40 @@ universalCost = 0.00205
 
 
 def get_new_readings_moisture():
+    #this function gets readings from the moisture sensors connected to
+    #the computer running the system through the use of serial ports
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 1")
         sensorValues = cursor.fetchall()
+        #the number of moisture sensors that are present in the database
         numSensors = len(sensorValues)
     
     newReadings = []
-    
-    #serial
+
+    #connection established that will time out after 10 seconds if there is no response
     ser = serial.Serial('COM3', 9600, timeout = 10)
+    #for each sensor returned from the database
     for each in sensorValues:
+        #M indicates a moisture reading is required
+        #each[1] is the hardware address of the sensor in question
+        #ended with a carriage return to indicate the end of the data
         dataToSend = "M" + str(each[1]) + "?\n"
+        #data is sent
         ser.write(bytearray(dataToSend,'ascii'))
+        #data that returned as a float value
         newReading = float(ser.readline(5))
         now = datetime.datetime.today()
+        #new readings is a list holding the reading for the moisture sensor
         newReadings.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"), newReading, "TEMPORARY", each[0], 1])
+    #the connection is closed
     ser.close()
     return newReadings
 
 
 def add_to_database_moisture(newReadings):
+    #this function adds the moisture readings to the database
+    #aswell as calculating the average reading
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
 
@@ -47,6 +60,7 @@ def add_to_database_moisture(newReadings):
             for each2 in cursor.fetchall():
                 for each2 in each2:
                     temp.append(each2)
+                    #variables set up to enable calculation of the average reading
             totalReading = 0
             numReadings = 0
             for each2 in newReadings:
@@ -54,6 +68,7 @@ def add_to_database_moisture(newReadings):
                     totalReading += each2[2]
                     numReadings += 1
             averageReading = totalReading / numReadings
+            #rounded to 3 decimal places
             averageReading = round(averageReading,3)
             each[3] = averageReading
             values = (each[0],each[1],each[2],each[3],each[4],each[5])
@@ -63,7 +78,7 @@ def add_to_database_moisture(newReadings):
                               values(?,?,?,?,?,?)""", values)
             db.commit()
             
-            
+            #inserts readingAfterID into operations
             for each2 in sensorsTemp:
                 if each[4] == each2[0]:
                     cursor.execute("select readingID from Reading where sensorID = ?", (each[4],))
@@ -76,27 +91,39 @@ def add_to_database_moisture(newReadings):
             
 
 def get_new_readings_sunlight():
+    #this function gets readings from the sunlight sensor connected to
+    #the computer running the system through the use of serial ports
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 2")
         sensorValues = cursor.fetchall()
+        #the number of sunlight sensors that are present in the database
         numSensors = len(sensorValues)
     
     newReadings = []
     
-    #serial
+    #connection established that will time out after 10 seconds if there is no response
     ser = serial.Serial('COM3', 9600, timeout = 10)
+    #for each sensor returned from the database
     for each in sensorValues:
+        #S indicates a moisture reading is required
+        #each[1] is the hardware address of the sensor in question
+        #ended with a carriage return to indicate the end of the data
         dataToSend = "S" + str(each[1]) + "?\n"
+        #data is sent
         ser.write(bytearray(dataToSend,'ascii'))
+        #data that returned as a float value
         newReading = float(ser.readline(5))
         now = datetime.datetime.today()
+        #new readings is a list holding the reading for the sunlight sensor
         newReadings.append([now.strftime("%Y/%m/%d"),"-", newReading, "-", each[0], 2])
+    #the connection is closed
     ser.close()
     return newReadings
 
 
 def add_to_database_sunlight(newReadings):
+    #this function adds the sunlight readings to the database
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         for each in newReadings:
@@ -109,29 +136,42 @@ def add_to_database_sunlight(newReadings):
 
 
 def get_new_readings_rainfall():
+    #this function gets readings from the rainfall sensors connected to
+    #the computer running the system through the use of serial ports
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         cursor.execute("select sensorID,hardwareAddress from Sensor where sensorTypeID = 3")
         sensorValues = cursor.fetchall()
+        #the number of moisture sensors that are present in the database
         numSensors = len(sensorValues)
     
     newReadings = []
     
-    #serial
+    #connection established that will time out after 10 seconds if there is no response
     ser = serial.Serial('COM3', 9600, timeout = 10)
+    #for each sensor returned from the database
     for each in sensorValues:
+        #R indicates a rainfall reading is required
+        #each[1] is the hardware address of the sensor in question
+        #ended with a carriage return to indicate the end of the data
         dataToSend = "R" + str(each[1]) + "?\n"
+        #data is sent
         ser.write(bytearray(dataToSend,'ascii'))
+        #data that returned as a float value
         newReading = str(ser.readline(12))
+        #the 2 different returned readings are seperated
         newReading2 = newReading[-5:]
         newReading = newReading[:-7]
         now = datetime.datetime.today()
+        #new readings is a list holding the reading for the rainfall sensor
         newReadings.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"), newReading, newReading2, each[0], 3])
+    #the connection is closed
     ser.close()
     return newReadings
 
 
 def add_to_database_rainfall(newReadings):
+    #this function adds the rainfall readings to the database
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
         for each in newReadings:
