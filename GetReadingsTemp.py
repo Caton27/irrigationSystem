@@ -173,11 +173,13 @@ def add_to_database_rainfall(newReadings):
                               values(?,?,?,?,?,?)""", values)
 
 def calculate_need(newReadings):
+    #this function calculates whether or not a flowerbed needs watering
     sensorIDs = []
     flowerbedIDs = []
     operations = []
     
     for each in newReadings:
+        #sensorID and averageReading added to the list sensorIDs
         sensorIDs.append([each[4],each[3]])
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
@@ -185,22 +187,29 @@ def calculate_need(newReadings):
             cursor.execute("select flowerbedID from Sensor where sensorID  = ?", (each[0],))
             result = (cursor.fetchall())[0][0]
             add = True
+            #check to see if another moisture sensor with the same flowerbedID has been added
+            #this avoids duplication of data
             for each2 in flowerbedIDs:
                 if str(each2[0]) == str(result):
                     add = False
             if add == True:
+                #flowerbedID and averageReading added to the list flowerbedIDs
                 flowerbedIDs.append([result,each[1]])
-                
+    
     number = 0
+    #for each flowerbed that has had a reading taken
     for each in flowerbedIDs:
         with sqlite3.connect("FlowerbedDatabase.db") as db:
             cursor = db.cursor()
             cursor.execute("select waterNeed from Plant where flowerbedID = ?", (each[0],))
             result = cursor.fetchall()
+            #empty list added to the list flowerbedIDs to hold waterNeeds
             each.append([])
             for each2 in result:
+                #waterNeeds added to the list flowerbedIDs
                 each[2].append(each2[0])
-                
+            #averages the water need across all plants in that flowerbed
+            #if no water need is present, a default value of 1.0 is used
             total = 0
             num = 0
             for each2 in each[2]:
@@ -210,56 +219,77 @@ def calculate_need(newReadings):
                 except ValueError:
                     pass
             try:
+                #average calculated
                 average = total / num
             except ZeroDivisionError:
+                #default value assigned
                 average = 1.0
             each[2] = average
 
+            #calculates the difference between the ideal moisture level and the measured one
             difference = each[1] - each[2]
             if difference < 0:
+                #if difference is equal to  or less than 0, no operation is required
+                #if difference < 0, it is assigned to 0 for simplicitys sake
                 difference  = 0
             else:
+                #rounded for conveniance
                 difference = round(difference, 3)
+                #added to the list flowerbedIDs
                 each.append(difference)
 
                 now = datetime.datetime.today()
                 cursor.execute("select valveID from Valve where flowerbedID = ?", (each[0],))
+                #trys to get the valveID assigned to the particular flowerbed
                 try:
                     valve = cursor.fetchall()[0][0]
                 except IndexError:
+                    #if no valve is present, a null value is assigned
                     valve = "-"
 
                 cursor.execute("select rate from Valve where flowerbedID = ?", (each[0],))
+                #trys to get the rate from the valve in the database
                 try:
                     rate = cursor.fetchall()[0][0]
                 except IndexError:
+                    #if no rate is present, a default rate is assigned
                     rate = 0.017
 
                 cursor.execute("select volume from Flowerbed where flowerbedID = ?", (each[0],))
+                #trys to get the volume required for the given flowerbed
                 try:
                     volume = float(cursor.fetchall()[0][0])
                 except IndexError and TypeError:
+                    #if no volume is present, a default volume is assigned
                     volume = 15.0
-                
+
+                #total volume of water (L) required for the operation
                 amount = difference * volume
                 amount = round(amount,4)
-                
+
+                #duration (s) that the valve must remain open for
                 duration = amount / rate
                 duration = round(duration,0)
-                
+
+                #the cost of the water that has been used
                 cost = amount * universalCost
                 cost = round(cost,5)
 
+                #gets the readingID from the database
                 averageReading = each[1]
                 cursor.execute("select readingID from Reading where averageReading = ?", (each[1],))
                 result = cursor.fetchall()
-                
+
+                #adds the operation to the list operations
                 operations.append([now.strftime("%Y/%m/%d"),now.strftime("%H:%M"),duration,amount,cost,result[0][0],0,valve,each[0]])
+                #increments number
                 number += 1
             
     with sqlite3.connect("FlowerbedDatabase.db") as db:
         cursor = db.cursor()
+        #for each operation that will occur
         for each in operations:
+            #added to database
             cursor.execute("""insert into Operation(
                               date, time, duration, amount, cost, readingBeforeID, readingAfterID, valveID, flowerbedID)
                               values (?,?,?,?,?,?,?,?,?)""", (each[0],each[1],each[2],each[3],each[4],each[5],each[6],each[7],each[8]))
