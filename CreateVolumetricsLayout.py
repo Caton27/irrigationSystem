@@ -201,7 +201,7 @@ class VolumetricsWindow(QWidget):
             self.cursor = db2.cursor()
             self.cursor.execute("""select cost from Operation
                                    where date > ?""",values)
-           for each in self.cursor.fetchall():
+            for each in self.cursor.fetchall():
                 for each in each:
                     #cost pulled from each operation then added to a total
                     self.totalCost += float(each)

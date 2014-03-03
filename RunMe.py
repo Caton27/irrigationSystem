@@ -24,10 +24,10 @@ try:
         from GetReadings import *
         simulationMode = 0
     except:
-        from GetReadingsTemp import *
+        from GetReadingsRandom import *
         simulationMode = 1
 except ImportError:
-    from GetReadingsTemp import *
+    from GetReadingsRandom import *
     simulationMode = 1
 
 import sys
